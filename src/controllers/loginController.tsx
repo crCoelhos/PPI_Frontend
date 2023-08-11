@@ -38,7 +38,7 @@ const useLoginController = () => {
         setLoggedIn(true);
         setLoginErrorPasswordOrUser(false);
         console.log("leticia:");
-        console.log(authenticator); // Aqui o valor deve estar disponível
+        console.log(authenticator);
         console.log("rogerio:");
         console.log(userData.token);
       })

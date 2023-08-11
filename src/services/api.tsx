@@ -6,7 +6,7 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: "http://localhost:3000",
-      timeout: 10000,
+      timeout: 4000,
     });
 
     const storedToken =

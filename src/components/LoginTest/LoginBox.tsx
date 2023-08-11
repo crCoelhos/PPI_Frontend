@@ -47,7 +47,6 @@ const LoginBox = () => {
                           type="text"
                           value={username}
                           onChange={handleUsernameChange}
-                          placeholder="Ex: 12345678910 ou usuario@email.com"
                           required
                         />
                       </div>

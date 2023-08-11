@@ -63,7 +63,7 @@ export default function PermanentLeftDrawer(props: Props) {
       </Toolbar>
       <Divider />
       <List>
-        {["Home", "Schedule", "Tasks", "Team"].map((text, index) => (
+        {["Home", "Schedule", "Tasks", "Team"].map((text) => (
           <ListItem key={text} disablePadding>
             <ListItemButton component={Link} to={`/${text.toLowerCase()}`}>
               <ListItemIcon>{iconMapping[text]}</ListItemIcon>
