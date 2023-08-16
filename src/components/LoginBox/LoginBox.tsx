@@ -10,13 +10,12 @@ const LoginBox = () => {
     handleUsernameChange,
     handlePasswordChange,
     handleSubmit,
-    loginError,
     loggedIn,
-    loginErrorPasswordOrUser,
   } = useLoginController();
 
   const location = useLocation();
   const navigate = useNavigate();
+  
   if (loggedIn) {
     if (location.state) {
       navigate(location.state.url, { state: location.state });

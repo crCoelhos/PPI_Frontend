@@ -44,9 +44,9 @@ export default function PermanentLeftDrawer(props: Props) {
   };
 
   const userData = useSessionStorageUserData();
-  const name = userData ? userData.name : null;
+  const name = userData ? userData : null;
 
-  
+
   const iconMapping: { [key: string]: JSX.Element } = {
     Home: <HomeIcon />,
     Schedule: <CalendarMonthIcon />,
@@ -59,7 +59,7 @@ export default function PermanentLeftDrawer(props: Props) {
   const drawer = (
     <div>
       <Toolbar>
-        <h2 className="toolbar-user-name">{name}</h2>
+        <h2 className="toolbar-user-name">{}</h2>
       </Toolbar>
       <Divider />
       <List>

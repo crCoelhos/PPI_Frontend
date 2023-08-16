@@ -1,18 +1,19 @@
 import React, { FC } from "react";
 import styles from "./TeamPage.module.css";
 import PrimaryAppBar from "../../components/PrimaryAppBar/PrimaryAppBar";
-import useSessionStorageUserData from "../../hooks/useSessionStorageUserData";
 import TeamMembersTable from "../../components/TeamMembersTable/TeamMembersTable";
+import TeamMembersAddMemberModal from "../../components/TeamMembersAddMemberModal/TeamMembersAddMemberModal";
 
 interface TeamPageProps {}
 
 const TeamPage: FC<TeamPageProps> = () => {
-  const userData = useSessionStorageUserData();
+  const storedErrors = JSON.parse(localStorage.getItem("storedErrors") || "[]");
 
   return (
     <div className={styles.TeamPage}>
       <PrimaryAppBar />
       <TeamMembersTable />
+      <TeamMembersAddMemberModal />
     </div>
   );
 };

@@ -7,7 +7,8 @@ import PrimaryAppBar from "../../components/PrimaryAppBar/PrimaryAppBar";
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = () => {
-  const userData = useSessionStorageUserData(); 
+  const { userData, token } = useSessionStorageUserData();
+  console.log(userData);
 
   return (
     <div className={styles.HomePage}>
@@ -16,8 +17,8 @@ const HomePage: React.FC<HomePageProps> = () => {
         {userData ? (
           <div>
             <h1>testando</h1>
-            <h2>Dados do Usuário:</h2>
-            <p>Nome: {userData.name}</p>
+            <h2>Dados do Usuário: {token}</h2>
+            <p>Nome: {userData.email}</p>
           </div>
         ) : (
           <p>Nenhum dado de usuário encontrado.</p>

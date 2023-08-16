@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./LoginPage.module.css";
-import LoginBox from "../../components/LoginTest/LoginBox";
+import LoginBox from "../../components/LoginBox/LoginBox";
 
 interface LoginPageProps {}
 

@@ -33,11 +33,11 @@ interface HeadCell {
 interface TeamMembersTableProps {}
 
 const TeamMembersTable: FC<TeamMembersTableProps> = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
   const [orderBy, setOrderBy] = useState<keyof User>("name");
   const [order, setOrder] = React.useState<Order>("asc");
   const [selected, setSelected] = useState<number[]>([]); // Alterado para guardar IDs selecionados
+
+  const [users, setUsers] = useState<User[]>([]);
 
   const headCells: readonly HeadCell[] = [
     {
@@ -76,16 +76,14 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
   const visuallyHidden = { visuallyHidden: { display: "none" } };
 
   useEffect(() => {
-    console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
         const res = await ApiService.fetchData<User[]>("admin/user/");
         setUsers(res);
-        setIsLoading(false);
         console.log("Users fetched:", res);
       } catch (error) {
         console.error(error);
-        setIsLoading(false);
+        console.log("Token ?????????");
       }
     };
 
