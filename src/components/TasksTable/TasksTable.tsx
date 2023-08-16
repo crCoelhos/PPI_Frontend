@@ -49,25 +49,31 @@ const TasksTable: FC<TasksTableProps> = () => {
       id: "name",
       numeric: false,
       disablePadding: true,
-      label: "Name",
+      label: "Nome",
     },
     {
       id: "description",
       numeric: false,
       disablePadding: false,
-      label: "Description",
+      label: "Descrição",
     },
     {
       id: "contractDate",
       numeric: false,
       disablePadding: false,
-      label: "Contract Date",
+      label: "Data do contrato",
+    },
+    {
+      id: "deadline",
+      numeric: false,
+      disablePadding: false,
+      label: "Prazo Final",
     },
     {
       id: "taskDomain",
       numeric: false,
       disablePadding: false,
-      label: "Task Domain",
+      label: "Dominio da atividade",
     },
     {
       id: "isActive",
@@ -221,6 +227,7 @@ const TasksTable: FC<TasksTableProps> = () => {
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.description}</TableCell>
               <TableCell>{task.contractDate}</TableCell>
+              <TableCell>{task.deadline}</TableCell>
               <TableCell>{task.taskDomain}</TableCell>
               <TableCell>{task.isActive ? "Ativo" : "Inativo"}</TableCell>
             </TableRow>

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import styles from "./TaksAddTaskModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
+import TaksAddTaskForm from "../TaksAddTaskForm/TaksAddTaskForm";
 
 interface TaksAddTaskModalProps {}
 
@@ -21,10 +22,14 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleCancel = () => {
+    handleClose(); // Fechar o modal
+  };
+
   return (
-    <div className={styles.TaksAddTaskModal}>
+    <div className={styles.TeamMembersAddMemberModal}>
       <div>
-        <Button onClick={handleOpen}>testar modal</Button>
+        <Button onClick={handleOpen}>Novo colaborador</Button>
         <Modal
           open={open}
           onClose={handleClose}
@@ -32,12 +37,7 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+            <TaksAddTaskForm onCancel={handleCancel} />
           </Box>
         </Modal>
       </div>

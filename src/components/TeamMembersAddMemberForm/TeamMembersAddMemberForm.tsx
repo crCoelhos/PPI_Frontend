@@ -20,6 +20,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs, { Dayjs } from "dayjs";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 
 const defaultTheme = createTheme();
 
@@ -52,13 +55,11 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
     handleSubmit,
   } = UserController();
 
-  const [value, setValue] = React.useState<Dayjs | null>(
-    dayjs("2014-08-18T21:11:54")
-  );
-
-  const handleChange = (newValue: Dayjs | null) => {
-    setValue(newValue);
-  };
+  React.useEffect(() => {
+    setSex("H");
+    setExpertiseId("1");
+    setRoleId("2"); //  Funcionário
+  }, []);
 
   return (
     <div className={styles.TeamMembersAddMemberForm}>
@@ -121,24 +122,37 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
                     />
                   </LocalizationProvider>
 
-                  <TextField
-                    margin="normal"
-                    fullWidth
+                  <InputLabel id="expertise-sex-select-label">
+                    Habilidades
+                  </InputLabel>
+                  <Select
+                    labelId="expertise-sex-select-label"
                     id="expertiseId"
-                    label="Expertise"
-                    name="expertiseId"
                     value={expertiseId}
+                    label="Expertise"
                     onChange={(e) => setExpertiseId(e.target.value)}
-                  />
-                  <TextField
-                    margin="normal"
-                    fullWidth
+                  >
+                    <MenuItem value={1}>Design</MenuItem>
+                    <MenuItem value={2}>Filmagem</MenuItem>
+                    <MenuItem value={3}>Fotografia</MenuItem>
+                    <MenuItem value={4}>Edição</MenuItem>
+                    <MenuItem value={5}>Desenvolvimento</MenuItem>
+                    <MenuItem value={6}>Roteiro</MenuItem>
+                    <MenuItem value={7}>Consultoria</MenuItem>
+                  </Select>
+
+                  <InputLabel id="genre-sex-select-label">Gênero</InputLabel>
+                  <Select
+                    labelId="genre-sex-select-label"
                     id="sex"
-                    label="Sexo"
-                    name="sex"
                     value={sex}
+                    label="Gênero"
                     onChange={(e) => setSex(e.target.value)}
-                  />
+                  >
+                    <MenuItem value={"H"}>Homem</MenuItem>
+                    <MenuItem value={"M"}>Mulher</MenuItem>
+                    <MenuItem value={"O"}>Outros</MenuItem>
+                  </Select>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -162,26 +176,32 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                   />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="hireDate"
-                    label="Data de Contratação"
-                    name="hireDate"
-                    value={hireDate}
-                    onChange={(e) => setHireDate(e.target.value)}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DesktopDatePicker
+                      label="Data de Contratação"
+                      onChange={(newDate: Dayjs | null) => {
+                        if (newDate) {
+                          setHireDate(newDate.format("YYYY-MM-DD"));
+                        } else {
+                          setHireDate("");
+                        }
+                      }}
+                    />
+                  </LocalizationProvider>
+
+                  <InputLabel id="demo-simple-select-label">Cargo</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
                     id="roleId"
-                    label="Cargo"
-                    name="roleId"
                     value={roleId}
+                    label="Cargo"
+                    defaultValue="Funcionário"
                     onChange={(e) => setRoleId(e.target.value)}
-                  />
+                  >
+                    <MenuItem value={"1"}>Administrador</MenuItem>
+                    <MenuItem value={"2"}>Funcionário</MenuItem>
+                    <MenuItem value={"3"}>Teste</MenuItem>
+                  </Select>
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
