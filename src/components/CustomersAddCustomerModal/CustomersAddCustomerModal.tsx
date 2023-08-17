@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styles from "./CustomersAddCustomerModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import TeamMembersAddMemberForm from "../TeamMembersAddMemberForm/TeamMembersAddMemberForm";
+import CustomersAddCustomerForm from "../CustomersAddCustomerForm/CustomersAddCustomerForm";
 
 interface CustomersAddCustomerModalProps {}
 
@@ -35,7 +35,7 @@ const CustomersAddCustomerModal: FC<CustomersAddCustomerModalProps> = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <TeamMembersAddMemberForm onCancel={handleCancel} />
+            <CustomersAddCustomerForm onCancel={handleCancel} />
           </Box>
         </Modal>
       </div>

@@ -16,9 +16,9 @@ const UserController = () => {
 
   const handleSubmit = async () => {
     const userData = {
-      name: name || "Nome Padrão",
-      cpf: cpf || "CPF Padrão",
-      email: email || "Email Padrão",
+      name: name,
+      cpf: cpf,
+      email: email,
       contact,
       birthdate,
       hireDate,
