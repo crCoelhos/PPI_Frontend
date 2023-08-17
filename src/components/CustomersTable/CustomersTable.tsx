@@ -1,3 +1,4 @@
+// import styles from './CustomersTable.module.css';
 import React, { FC, useEffect, useState } from "react";
 import {
   Table,
@@ -10,89 +11,96 @@ import {
   TableSortLabel,
   Box,
 } from "@mui/material";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import styles from "./TeamMembersTable.module.css";
-import { HeadCell, UserData } from "../../interfaces/types";
+import axios from "axios";
+import styles from "./CustomersTable.module.css";
+import { CustomersHeadCell, CustomerData } from "../../interfaces/types";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
+const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
-interface TeamMembersTableProps {}
+interface CustomersTableProps {}
 
-const TeamMembersTable: FC<TeamMembersTableProps> = () => {
-  const [orderBy, setOrderBy] = useState<keyof UserData>("name");
+const CustomersTable: FC<CustomersTableProps> = () => {
+  const [orderBy, setOrderBy] = useState<keyof CustomerData>("businessName");
   const [order, setOrder] = React.useState<Order>("asc");
   const [selected, setSelected] = useState<number[]>([]);
 
-  const [users, setUsers] = useState<UserData[]>([]);
+  const [customers, setCustomers] = useState<CustomerData[]>([]);
 
-  const headCells: readonly HeadCell[] = [
+  const headCells: readonly CustomersHeadCell[] = [
     {
-      id: "name",
+      id: "businessName",
       numeric: false,
       disablePadding: true,
-      label: "Name",
+      label: "Empresa",
     },
     {
-      id: "email",
+      id: "cnpj",
       numeric: false,
       disablePadding: false,
-      label: "Email",
+      label: "CNPJ",
     },
     {
-      id: "contact",
+      id: "contactName",
       numeric: false,
       disablePadding: false,
-      label: "Contact",
+      label: "Representante",
     },
     {
-      id: "expertiseId",
+      id: "size",
       numeric: true,
       disablePadding: false,
-      label: "Expertise",
+      label: "Categoria",
     },
     {
-      id: "is_active",
+      id: "isActive",
       numeric: false,
       disablePadding: false,
       label: "Status",
     },
-    // aqui
   ];
 
   const visuallyHidden = { visuallyHidden: { display: "none" } };
 
   useEffect(() => {
     const fetchUsers = async () => {
+      let tokenValue: string = "";
+      let accessValue: string = accessHeaderValue || " ";
       try {
         const storedToken =
           localStorage.getItem("user") || sessionStorage.getItem("user");
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
-          const tokenValue = tokenObject.token;
+          tokenValue = tokenObject.token;
+          console.log(tokenValue);
 
-          const response = await axios.get(`${appURL}admin/users/`, {
-            headers: {
-              Authorization: `${tokenValue}`,
-            },
-          });
-
-          setUsers(response.data);
-          console.log("Users fetched:", response.data);
+          const response = await axios.get<CustomerData[]>(
+            `${appURL}admin/customers/`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: tokenValue,
+                Access: accessValue,
+              },
+            }
+          );
+          setCustomers(response.data);
         }
+
+        console.log("Request successful:", customers);
       } catch (error) {
-        console.error(error);
-        console.log("Token ????????? erro");
+        if (axios.isAxiosError(error)) {
+          console.error("Error:", error.response?.data);
+        } else {
+          console.error("Error:", error);
+        }
       }
     };
 
     fetchUsers();
   }, []);
 
-  // if (!loading) {
-  //   window.location.reload();
-  // }
-
-  const createSortHandler = (property: keyof UserData) => () => {
+  const createSortHandler = (property: keyof CustomerData) => () => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -100,36 +108,28 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
 
   type Order = "asc" | "desc";
 
-  const comparator = (a: UserData, b: UserData) => {
-    if (orderBy === "name") {
+  const comparator = (a: CustomerData, b: CustomerData) => {
+    if (orderBy === "businessName") {
       return order === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    } else if (orderBy === "email") {
+        ? a.businessName.localeCompare(b.businessName)
+        : b.businessName.localeCompare(a.businessName);
+    } else if (orderBy === "contactName") {
       return order === "asc"
-        ? a.email.localeCompare(b.email)
-        : b.email.localeCompare(a.email);
-    } else if (orderBy === "contact") {
+        ? a.contactName.localeCompare(b.contactName)
+        : b.contactName.localeCompare(a.contactName);
+    } else if (orderBy === "size") {
       return order === "asc"
-        ? a.contact.localeCompare(b.contact)
-        : b.contact.localeCompare(a.contact);
-    } else if (orderBy === "expertiseId") {
-      return order === "asc"
-        ? a.expertiseId - b.expertiseId
-        : b.expertiseId - a.expertiseId;
-    } else if (orderBy === "is_active") {
-      return order === "asc"
-        ? a.expertiseId - b.expertiseId
-        : b.expertiseId - a.expertiseId;
+        ? a.size.localeCompare(b.size)
+        : b.size.localeCompare(a.size);
     }
     return 0;
   };
 
-  const sortedUsers = [...users].sort(comparator);
+  const sortedCustomers = [...customers].sort(comparator);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const selectedIds = sortedUsers.map((user) => user.id);
+      const selectedIds = sortedCustomers.map((customer) => customer.id);
       setSelected(selectedIds);
       return;
     }
@@ -163,18 +163,19 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
 
   return (
     <TableContainer>
-      {users.length > 0 ? ( // Verifica se há dados carregados
-        <Table className={styles.TeamMembersTable}>
+      {customers.length > 0 ? (
+        <Table className={styles.CustomersTable}>
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
                   indeterminate={
-                    selected.length > 0 && selected.length < sortedUsers.length
+                    selected.length > 0 &&
+                    selected.length < sortedCustomers.length
                   }
                   checked={
-                    sortedUsers.length > 0 &&
-                    selected.length === sortedUsers.length
+                    sortedCustomers.length > 0 &&
+                    selected.length === sortedCustomers.length
                   }
                   onChange={handleSelectAllClick}
                 />
@@ -201,25 +202,29 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedUsers.map((user) => (
+            {sortedCustomers.map((customer) => (
               <TableRow
-                key={user.id}
+                key={customer.id}
                 hover
                 role="checkbox"
                 tabIndex={-1}
-                selected={isSelected(user.id)}
+                selected={isSelected(customer.id)}
               >
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={isSelected(user.id)}
-                    onChange={(event) => handleCheckboxClick(event, user.id)}
+                    checked={isSelected(customer.id)}
+                    onChange={(event) =>
+                      handleCheckboxClick(event, customer.id)
+                    }
                   />
                 </TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.contact}</TableCell>
-                <TableCell align="right">{user.expertiseId}</TableCell>
-                <TableCell>{!user.is_active ? "Inativo" : "Ativo"}</TableCell>
+                <TableCell>{customer.businessName}</TableCell>
+                <TableCell>{customer.cnpj}</TableCell>
+                <TableCell>{customer.contactName}</TableCell>
+                <TableCell align="right">{customer.size}</TableCell>
+                <TableCell>
+                  {!customer.isActive ? "Inativo" : "Ativo"}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -231,4 +236,4 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
   );
 };
 
-export default TeamMembersTable;
+export default CustomersTable;

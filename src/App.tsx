@@ -13,17 +13,19 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import TeamPage from "./pages/TeamPage/TeamPage";
 import TasksPage from "./pages/TasksPage/TasksPage";
 import SigninPage from "./pages/SigninPage/SigninPage";
+import CustomersPage from "./pages/CustomersPage/CustomersPage";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<SigninPage />} />
+          <Route path="/login" element={<SigninPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/tasks" element={<TasksPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
           <Route path="/signin" element={<SigninPage />} />
         </Routes>
       </BrowserRouter>

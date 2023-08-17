@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import HomeIcon from "@mui/icons-material/Home";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -33,6 +34,7 @@ const iconMapping: { [key: string]: JSX.Element } = {
   Schedule: <CalendarMonthIcon />,
   Tasks: <AssignmentIcon />,
   Team: <PeopleAltIcon />,
+  Customers: <HandshakeIcon />,
   Announcements: <AnnouncementIcon />,
   Logout: <ExitToAppIcon />,
 };
@@ -63,7 +65,7 @@ const TemporaryLeftDrawer: React.FC<TemporaryLeftDrawerProps> = ({
         onKeyDown={toggleDrawer("left", false)}
       >
         <List>
-          {["Home", "Schedule", "Tasks", "Team"].map((text, index) => (
+          {["Home", "Schedule", "Tasks", "Team", "Customers"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton component={Link} to={`/${text.toLowerCase()}`}>
                 <ListItemIcon>{iconMapping[text]}</ListItemIcon>

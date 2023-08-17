@@ -24,3 +24,37 @@ export interface UserData {
     name: string;
   };
 }
+
+export interface CustomerData {
+  id: number;
+  businessName: string;
+  cnpj: string;
+  contactName: string;
+  contactCpf: string;
+  isActive: boolean;
+  size: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  contact: string;
+  expertiseId: number;
+  is_active: boolean;
+}
+
+export interface HeadCell {
+  disablePadding: boolean;
+  id: keyof User;
+  label: string;
+  numeric: boolean;
+}
+export interface CustomersHeadCell {
+  disablePadding: boolean;
+  id: keyof CustomerData;
+  label: string;
+  numeric: boolean;
+}
