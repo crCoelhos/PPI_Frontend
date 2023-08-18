@@ -12,28 +12,9 @@ import {
 } from "@mui/material";
 import styles from "./TasksTable.module.css";
 import ApiService from "../../services/api";
+import { Task, TasksHeadCell } from "../../interfaces/types";
 
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  contractDate: string;
-  contractDocument: string | null;
-  startDate: string;
-  deadline: string;
-  updatedDeadline: string | null;
-  taskDomain: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
 
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Task;
-  label: string;
-  numeric: boolean;
-}
 
 interface TasksTableProps {}
 
@@ -44,7 +25,7 @@ const TasksTable: FC<TasksTableProps> = () => {
   const [order, setOrder] = React.useState<Order>("asc");
   const [selected, setSelected] = useState<number[]>([]);
 
-  const headCells: readonly HeadCell[] = [
+  const headCells: readonly TasksHeadCell[] = [
     {
       id: "name",
       numeric: false,

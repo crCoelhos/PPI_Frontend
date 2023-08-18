@@ -29,7 +29,7 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
   return (
     <div className={styles.TeamMembersAddMemberModal}>
       <div>
-        <Button onClick={handleOpen}>Novo colaborador</Button>
+        <Button onClick={handleOpen}>Nova demanda</Button>
         <Modal
           open={open}
           onClose={handleClose}

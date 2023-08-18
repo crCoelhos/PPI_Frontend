@@ -2,17 +2,17 @@ import { useState } from "react";
 import api from "../services/api"; // Importe o seu ApiService aqui
 
 const UserController = () => {
-  const [name, setName] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [hireDate, setHireDate] = useState("");
-  const [roleId, setRoleId] = useState("");
-  const [sex, setSex] = useState("");
-  const [is_active, setStatus] = useState(true);
-  const [password, setPassword] = useState("");
-  const [expertiseId, setExpertiseId] = useState("");
+  const [name, setName] = useState<string>("");
+  const [cpf, setCpf] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
+  const [birthdate, setBirthdate] = useState<string>("");
+  const [hireDate, setHireDate] = useState<string>("");
+  const [roleId, setRoleId] = useState<string>("");
+  const [sex, setSex] = useState<string>("");
+  const [is_active, setStatus] = useState<boolean>(true);
+  const [password, setPassword] = useState<string>("");
+  const [expertiseId, setExpertiseId] = useState<number | string>("");
 
   const handleSubmit = async () => {
     const userData = {
@@ -45,7 +45,6 @@ const UserController = () => {
       setStatus(false);
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
-      
     }
   };
 

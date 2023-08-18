@@ -58,3 +58,25 @@ export interface CustomersHeadCell {
   label: string;
   numeric: boolean;
 }
+
+export interface Task {
+  id: number;
+  name: string;
+  description: string;
+  contractDate: string;
+  contractDocument: string | null;
+  startDate: string;
+  deadline: string;
+  updatedDeadline: string | null;
+  taskDomain: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TasksHeadCell {
+  disablePadding: boolean;
+  id: keyof Task;
+  label: string;
+  numeric: boolean;
+}

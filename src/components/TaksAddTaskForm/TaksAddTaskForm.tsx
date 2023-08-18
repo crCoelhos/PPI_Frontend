@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import styles from "./TaksAddTaskForm.module.css";
 import { ThemeProvider } from "@emotion/react";
 import {
@@ -16,7 +16,12 @@ import {
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
-import UserController from "../../controllers/userController";
+import TaskController from "../../controllers/taskController";
+import axios from "axios";
+import { CustomerData } from "../../interfaces/types";
+
+const appURL = process.env.REACT_APP_SERVER_URL;
+const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
 const defaultTheme = createTheme();
 
@@ -26,33 +31,74 @@ interface TaksAddTaskFormProps {
 
 // TODO corrigir o modal para refletir o adicionar de tarefas, bem como arrumar a visualização do modal
 
-const TaksAddTaskForm: FC<TaksAddTaskFormProps> = ({ onCancel }) => {
+const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
+  const [customers, setCustomers] = React.useState<CustomerData[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = React.useState("");
+
   const {
     name,
-    cpf,
-    email,
-    contact,
-    birthdate,
-    hireDate,
-    roleId,
-    sex,
-    expertiseId,
     setName,
-    setCpf,
-    setEmail,
-    setSex,
-    setContact,
-    setBirthdate,
-    setHireDate,
-    setRoleId,
-    setExpertiseId,
+    description,
+    setDescription,
+    contractDate,
+    setContractDate,
+    contractDocument,
+    setContractDocument,
+    startDate,
+    setStartDate,
+    deadline,
+    setDeadline,
+    updatedDeadline,
+    setUpdatedDeadline,
+    taskDomain,
+    setTaskDomain,
+    isActive,
+    setIsActive,
+    customerId,
+    setCustomerId,
     handleSubmit,
-  } = UserController();
+  } = TaskController();
 
   React.useEffect(() => {
-    setSex("H");
-    setExpertiseId("1");
-    setRoleId("2"); //  Funcionário
+    setCustomerId(0);
+    setTaskDomain("0");
+    setCustomerId(1);
+
+    const fetchUsers = async () => {
+      let tokenValue: string = "";
+      let accessValue: string = accessHeaderValue || " ";
+      try {
+        const storedToken =
+          localStorage.getItem("user") || sessionStorage.getItem("user");
+        if (storedToken) {
+          const tokenObject = JSON.parse(storedToken);
+          tokenValue = tokenObject.token;
+          console.log(tokenValue);
+
+          const response = await axios.get<CustomerData[]>(
+            `${appURL}admin/customers/`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: tokenValue,
+                Access: accessValue,
+              },
+            }
+          );
+          setCustomers(response.data);
+        }
+
+        console.log("Request successful:", customers);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Error:", error.response?.data);
+        } else {
+          console.error("Error:", error);
+        }
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   return (
@@ -71,7 +117,7 @@ const TaksAddTaskForm: FC<TaksAddTaskFormProps> = ({ onCancel }) => {
               {/* <PersonAddIcon /> */}
             </Avatar>
             <Typography component="h1" variant="h5">
-              Cadastrar colaborador
+              Cadastrar atividade
             </Typography>
             <Box
               component="form"
@@ -85,67 +131,42 @@ const TaksAddTaskForm: FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     margin="normal"
                     required
                     fullWidth
-                    id="login"
-                    label="Nome"
+                    id="name"
+                    label="Titulo da atividade"
                     name="name"
                     autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     autoFocus
                   />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
-                      label="Data de Nascimento"
+                      label="Data de início"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
-                          setBirthdate(newDate.format("YYYY-MM-DD"));
+                          setStartDate(newDate.format("YYYY-MM-DD"));
                         } else {
-                          setBirthdate("");
+                          setStartDate("");
                         }
                       }}
                     />
                   </LocalizationProvider>
 
-                  <InputLabel id="expertise-sex-select-label">
-                    Habilidades
+                  <InputLabel id="domain-select-label">
+                    Dominio da atividade
                   </InputLabel>
                   <Select
-                    labelId="expertise-sex-select-label"
-                    id="expertiseId"
-                    value={expertiseId}
-                    label="Expertise"
-                    onChange={(e) => setExpertiseId(e.target.value)}
+                    labelId="domain-select-label"
+                    id="taskDomain"
+                    value={taskDomain}
+                    label="Domínio da tarefa"
+                    onChange={(e) => setTaskDomain(e.target.value)}
                   >
-                    <MenuItem value={1}>Design</MenuItem>
-                    <MenuItem value={2}>Filmagem</MenuItem>
-                    <MenuItem value={3}>Fotografia</MenuItem>
-                    <MenuItem value={4}>Edição</MenuItem>
-                    <MenuItem value={5}>Desenvolvimento</MenuItem>
-                    <MenuItem value={6}>Roteiro</MenuItem>
-                    <MenuItem value={7}>Consultoria</MenuItem>
-                  </Select>
-
-                  <InputLabel id="genre-sex-select-label">Gênero</InputLabel>
-                  <Select
-                    labelId="genre-sex-select-label"
-                    id="sex"
-                    value={sex}
-                    label="Gênero"
-                    onChange={(e) => setSex(e.target.value)}
-                  >
-                    <MenuItem value={"H"}>Homem</MenuItem>
-                    <MenuItem value={"M"}>Mulher</MenuItem>
-                    <MenuItem value={"O"}>Outros</MenuItem>
+                    {/* TODO arrumar expertises para fazer isso vir pra ca */}
+                    <MenuItem value={0}>quebrado</MenuItem>
+                    <MenuItem value={1}>por</MenuItem>
+                    <MenuItem value={2}>enquanto</MenuItem>
                   </Select>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -153,48 +174,53 @@ const TaksAddTaskForm: FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     margin="normal"
                     required
                     fullWidth
-                    id="cpf"
-                    label="CPF"
-                    name="cpf"
-                    value={cpf}
-                    onChange={(e) => setCpf(e.target.value)}
-                    autoFocus
+                    id="description"
+                    label="Descrição"
+                    name="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                   />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="contact"
-                    label="Contato"
-                    name="contact"
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                  />
+
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
-                      label="Data de Contratação"
+                      label="Data limite"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
-                          setHireDate(newDate.format("YYYY-MM-DD"));
+                          setDeadline(newDate.format("YYYY-MM-DD"));
                         } else {
-                          setHireDate("");
+                          setDeadline("");
                         }
                       }}
                     />
                   </LocalizationProvider>
 
-                  <InputLabel id="demo-simple-select-label">Cargo</InputLabel>
+                  {/* <InputLabel id="customer-select-label">
+                    Oriem da atividade
+                  </InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="roleId"
-                    value={roleId}
-                    label="Cargo"
-                    defaultValue="Funcionário"
-                    onChange={(e) => setRoleId(e.target.value)}
+                    labelId="customer-select-label"
+                    id="customerId"
+                    value={customerId}
+                    label="customerId"
+                    // onChange={(e) => setCustomerId(e.target.value)}
                   >
-                    <MenuItem value={"1"}>Administrador</MenuItem>
-                    <MenuItem value={"2"}>Funcionário</MenuItem>
-                    <MenuItem value={"3"}>Teste</MenuItem>
+                    <MenuItem></MenuItem>
+                  </Select> */}
+                  <InputLabel id="customer-select-label">
+                    Oriem da atividade
+                  </InputLabel>
+                  <Select
+                    labelId="customer-select-label"
+                    id="customerId"
+                    value={selectedCustomer}
+                    label="customerId"
+                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                  >
+                    {customers.map((customer) => (
+                      <MenuItem key={customer.id} value={Number(customer.id)}>
+                        {customer.businessName}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
               </Grid>

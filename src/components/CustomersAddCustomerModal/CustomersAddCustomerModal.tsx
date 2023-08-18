@@ -27,7 +27,7 @@ const CustomersAddCustomerModal: FC<CustomersAddCustomerModalProps> = () => {
   return (
     <div className={styles.CustomersAddCustomerModal}>
       <div>
-        <Button onClick={handleOpen}>Novo colaborador</Button>
+        <Button onClick={handleOpen}>Novo cliente</Button>
         <Modal
           open={open}
           onClose={handleClose}
