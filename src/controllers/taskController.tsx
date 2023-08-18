@@ -9,9 +9,9 @@ const TaskController = () => {
   const [startDate, setStartDate] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
   const [updatedDeadline, setUpdatedDeadline] = useState<string | null>("");
-  const [taskDomain, setTaskDomain] = useState<string>("");
+  const [taskDomain, setTaskDomain] = useState<number | string>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [customerId, setCustomerId] = useState<number>(0);
+  const [customerId, setCustomerId] = useState<number | string>(0);
 
   const handleSubmit = async () => {
     const taskData = {
@@ -21,10 +21,10 @@ const TaskController = () => {
       contractDocument: contractDocument,
       startDate: startDate,
       deadline: deadline,
-      updatedDeadline: updatedDeadline,
+      updatedDeadline: updatedDeadline || null,
       taskDomain: taskDomain,
       isActive: isActive || false,
-      customerId: customerId || 0,
+      customerId: customerId,
     };
 
     try {
@@ -37,10 +37,9 @@ const TaskController = () => {
       setContractDocument(null);
       setStartDate("");
       setDeadline("");
-      setUpdatedDeadline(null);
       setTaskDomain("");
       setIsActive(false);
-      setCustomerId(0);
+      setCustomerId("");
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
     }

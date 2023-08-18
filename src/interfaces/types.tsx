@@ -37,6 +37,13 @@ export interface CustomerData {
   updatedAt: string;
 }
 
+export interface ExpertiseData {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface User {
   id: number;
   name: string;

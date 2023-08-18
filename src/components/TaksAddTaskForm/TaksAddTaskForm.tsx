@@ -14,17 +14,21 @@ import {
   Button,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import TaskController from "../../controllers/taskController";
 import axios from "axios";
-import { CustomerData } from "../../interfaces/types";
+import { CustomerData, ExpertiseData } from "../../interfaces/types";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
 const defaultTheme = createTheme();
 
+// TODO all the task related functions are ok but need to
+//  do some teaks on expertise relation, as well as in the sending keys
+//  from tasks where customerId comes in play
 interface TaksAddTaskFormProps {
   onCancel: () => void;
 }
@@ -33,6 +37,8 @@ interface TaksAddTaskFormProps {
 
 const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
   const [customers, setCustomers] = React.useState<CustomerData[]>([]);
+  const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
+  const [selectedTaskDomain, setSelectedTaskDomain] = React.useState("");
   const [selectedCustomer, setSelectedCustomer] = React.useState("");
 
   const {
@@ -60,10 +66,6 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
   } = TaskController();
 
   React.useEffect(() => {
-    setCustomerId(0);
-    setTaskDomain("0");
-    setCustomerId(1);
-
     const fetchUsers = async () => {
       let tokenValue: string = "";
       let accessValue: string = accessHeaderValue || " ";
@@ -75,7 +77,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
           tokenValue = tokenObject.token;
           console.log(tokenValue);
 
-          const response = await axios.get<CustomerData[]>(
+          const customerResponse = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,
             {
               headers: {
@@ -85,7 +87,19 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
               },
             }
           );
-          setCustomers(response.data);
+          setCustomers(customerResponse.data);
+
+          const expertiseResponse = await axios.get<ExpertiseData[]>(
+            `${appURL}admin/expertises/`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: tokenValue,
+                Access: accessValue,
+              },
+            }
+          );
+          setExpertises(expertiseResponse.data);
         }
 
         console.log("Request successful:", customers);
@@ -114,7 +128,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-              {/* <PersonAddIcon /> */}
+              <AssignmentIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Cadastrar atividade
@@ -134,7 +148,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     id="name"
                     label="Titulo da atividade"
                     name="name"
-                    autoComplete="name"
+                    autoComplete="taskTitle"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     autoFocus
@@ -157,18 +171,35 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     Dominio da atividade
                   </InputLabel>
                   <Select
-                    labelId="domain-select-label"
+                    labelId="customer-select-label"
                     id="taskDomain"
-                    value={taskDomain}
-                    label="Domínio da tarefa"
-                    onChange={(e) => setTaskDomain(e.target.value)}
+                    value={selectedTaskDomain}
+                    label="Dominio"
+                    onChange={(e) => {
+                      setSelectedTaskDomain(e.target.value);
+                      setTaskDomain(e.target.value); 
+                    }}
                   >
-                    {/* TODO arrumar expertises para fazer isso vir pra ca */}
-                    <MenuItem value={0}>quebrado</MenuItem>
-                    <MenuItem value={1}>por</MenuItem>
-                    <MenuItem value={2}>enquanto</MenuItem>
+                    {expertises.map((expertise) => (
+                      <MenuItem key={expertise.id} value={Number(expertise.id)}>
+                        {expertise.name}
+                      </MenuItem>
+                    ))}
                   </Select>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DesktopDatePicker
+                      label="Data do contrato"
+                      onChange={(newDate: Dayjs | null) => {
+                        if (newDate) {
+                          setContractDate(newDate.format("YYYY-MM-DD"));
+                        } else {
+                          setContractDate("");
+                        }
+                      }}
+                    />
+                  </LocalizationProvider>
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <TextField
                     margin="normal"
@@ -194,18 +225,6 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     />
                   </LocalizationProvider>
 
-                  {/* <InputLabel id="customer-select-label">
-                    Oriem da atividade
-                  </InputLabel>
-                  <Select
-                    labelId="customer-select-label"
-                    id="customerId"
-                    value={customerId}
-                    label="customerId"
-                    // onChange={(e) => setCustomerId(e.target.value)}
-                  >
-                    <MenuItem></MenuItem>
-                  </Select> */}
                   <InputLabel id="customer-select-label">
                     Oriem da atividade
                   </InputLabel>
@@ -214,7 +233,10 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     id="customerId"
                     value={selectedCustomer}
                     label="customerId"
-                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedCustomer(e.target.value);
+                      setCustomerId(e.target.value); // Atualize o estado do controlador
+                    }}
                   >
                     {customers.map((customer) => (
                       <MenuItem key={customer.id} value={Number(customer.id)}>
