@@ -140,6 +140,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
               sx={{ mt: 1 }}
             >
               <Grid container spacing={2}>
+                {/* COLUNA1 */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     margin="normal"
@@ -171,13 +172,14 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     Dominio da atividade
                   </InputLabel>
                   <Select
+                    className={styles.SelectOptions}
                     labelId="customer-select-label"
                     id="taskDomain"
                     value={selectedTaskDomain}
                     label="Dominio"
                     onChange={(e) => {
                       setSelectedTaskDomain(e.target.value);
-                      setTaskDomain(e.target.value); 
+                      setTaskDomain(e.target.value);
                     }}
                   >
                     {expertises.map((expertise) => (
@@ -199,9 +201,14 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     />
                   </LocalizationProvider>
                 </Grid>
+                {/* /COLUNA1 */}
 
+                {/* COLUNA2 */}
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    variant="outlined"
+                    multiline
+                    rows={4}
                     margin="normal"
                     required
                     fullWidth
@@ -229,13 +236,14 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     Oriem da atividade
                   </InputLabel>
                   <Select
+                    className={styles.SelectOptions}
                     labelId="customer-select-label"
                     id="customerId"
                     value={selectedCustomer}
                     label="customerId"
                     onChange={(e) => {
                       setSelectedCustomer(e.target.value);
-                      setCustomerId(e.target.value); // Atualize o estado do controlador
+                      setCustomerId(e.target.value);
                     }}
                   >
                     {customers.map((customer) => (
@@ -245,6 +253,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     ))}
                   </Select>
                 </Grid>
+                {/* /COLUNA2 */}
               </Grid>
               <Grid container spacing={2}>
                 <Grid

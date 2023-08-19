@@ -5,21 +5,20 @@ import TeamMembersTable from "../../components/TeamMembersTable/TeamMembersTable
 import TeamMembersAddMemberModal from "../../components/TeamMembersAddMemberModal/TeamMembersAddMemberModal";
 import { UserData } from "../../interfaces/types";
 import ApiService from "../../services/api";
- 
 
 interface TeamPageProps {}
 
 const TeamPage: FC<TeamPageProps> = () => {
-
-
   return (
-    <div className={styles.TeamPage}>
+    <div className={styles.TeamPageContent}>
       <PrimaryAppBar />
-      <TeamMembersTable />
+      <div className={styles.TeamPage}>
+        <div className={styles.tableArea}>
+          <TeamMembersTable />
+        </div>
+      </div>
       <TeamMembersAddMemberModal />
     </div>
   );
 };
 export default TeamPage;
-
-

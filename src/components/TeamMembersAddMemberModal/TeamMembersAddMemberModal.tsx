@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import styles from "./TeamMembersAddMemberModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import TeamMembersAddMemberForm from "../TeamMembersAddMemberForm/TeamMembersAddMemberForm";
+import AddIcon from "@mui/icons-material/Add";
 
 interface TeamMembersAddMemberModalProps {}
 
@@ -14,7 +15,11 @@ const style = {
   bgcolor: "background.paper",
   p: 2,
 };
-
+const buttonStyle = {
+  p: 2,
+  marginTop: "12px",
+  marginLeft: "78vw",
+};
 const TeamMembersAddMemberModal: FC<TeamMembersAddMemberModalProps> = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -27,7 +32,14 @@ const TeamMembersAddMemberModal: FC<TeamMembersAddMemberModalProps> = () => {
   return (
     <div className={styles.TeamMembersAddMemberModal}>
       <div>
-        <Button onClick={handleOpen}>Novo colaborador</Button>
+        <Button
+          onClick={handleOpen}
+          sx={buttonStyle}
+          variant="contained"
+          startIcon={<AddIcon />}
+        >
+          Novo colaborador
+        </Button>
         <Modal
           open={open}
           onClose={handleClose}

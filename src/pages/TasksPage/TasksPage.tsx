@@ -6,12 +6,15 @@ import TaksAddTaskModal from "../../components/TaksAddTaskModal/TaksAddTaskModal
 
 interface TasksPageProps {}
 
-
 const TasksPage: FC<TasksPageProps> = () => (
-  <div className={styles.TasksPage}>
+  <div className={styles.TasksPageContent}>
     <PrimaryAppBar />
-    <TasksTable />
-    <TaksAddTaskModal />  
+    <div className={styles.TasksPage}>
+      <div className={styles.tableArea}>
+        <TasksTable />
+      </div>
+    </div>
+    <TaksAddTaskModal />
   </div>
 );
 

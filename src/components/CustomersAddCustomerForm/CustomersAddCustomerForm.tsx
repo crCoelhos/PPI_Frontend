@@ -84,6 +84,7 @@ const CustomersAddCustomerForm: FC<CustomersAddCustomerFormProps> = ({
                 <Grid item xs={12} sm={6}>
                   <InputLabel id="size-select-label">Categoria</InputLabel>
                   <Select
+                    className={styles.SelectOptions}
                     labelId="size-select-label"
                     id="size"
                     value={size}
