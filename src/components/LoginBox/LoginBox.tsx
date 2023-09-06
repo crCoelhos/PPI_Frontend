@@ -15,7 +15,7 @@ const LoginBox = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   if (loggedIn) {
     if (location.state) {
       navigate(location.state.url, { state: location.state });

@@ -37,10 +37,6 @@ const useLoginController = () => {
         setLoginError(false);
         setLoggedIn(true);
         setLoginErrorPasswordOrUser(false);
-        console.log("leticia:");
-        console.log(authenticator);
-        console.log("rogerio:");
-        console.log(userData.token);
       })
       .catch((error) => {
         console.error(error.response.data);

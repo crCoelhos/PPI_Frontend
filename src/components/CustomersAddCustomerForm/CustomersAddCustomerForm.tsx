@@ -1,5 +1,3 @@
-// import React, { FC } from 'react';
-// import styles from './CustomersAddCustomerForm.module.css';
 import React, { FC } from "react";
 import styles from "./CustomersAddCustomerForm.module.css";
 import { ThemeProvider } from "@emotion/react";
