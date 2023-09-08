@@ -29,7 +29,7 @@ const TaskController = () => {
 
     try {
       const response = await api.postData("/admin/task/", taskData);
-      console.log("Dados enviados com sucesso:", response);
+      console.log("Dados enviados com sucesso:");
 
       setName("");
       setDescription("");

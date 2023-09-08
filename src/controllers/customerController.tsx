@@ -22,7 +22,6 @@ const CustomerController = () => {
       };
 
       const response = await api.postData("/admin/customer/", businessData);
-      console.log("Dados enviados com sucesso:", response);
 
       // wipa os campos após o envio
       setBusinessName("");

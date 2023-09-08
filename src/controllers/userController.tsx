@@ -31,7 +31,7 @@ const UserController = () => {
 
     try {
       const response = await api.postData("/admin/user/", userData);
-      console.log("Dados enviados com sucesso:", response);
+      console.log("Dados enviados com sucesso:");
 
       setName("");
       setCpf("");

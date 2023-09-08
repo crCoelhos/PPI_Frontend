@@ -1,11 +1,20 @@
-import React, { FC } from 'react';
-import styles from './SchedulePage.module.css';
+import React, { FC } from "react";
+import styles from "./SchedulePage.module.css";
+import PrimaryAppBar from "../../components/PrimaryAppBar/PrimaryAppBar";
+import TaksAddTaskModal from "../../components/TaksAddTaskModal/TaksAddTaskModal";
+import MainCalendar from "../../components/MainCalendar/MainCalendar";
 
 interface SchedulePageProps {}
 
 const SchedulePage: FC<SchedulePageProps> = () => (
-  <div className={styles.SchedulePage}>
-    SchedulePage Component
+  <div className={styles.SchedulePageContent}>
+    <PrimaryAppBar />
+    <TaksAddTaskModal />
+    <div className={styles.SchedulePage}>
+      <div className={styles.tableArea}>
+        <MainCalendar />
+      </div>
+    </div>
   </div>
 );
 

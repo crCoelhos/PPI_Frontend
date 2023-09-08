@@ -72,7 +72,6 @@ const CustomersTable: FC<CustomersTableProps> = () => {
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
-          console.log(tokenValue);
 
           const response = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,

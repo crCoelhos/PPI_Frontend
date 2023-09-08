@@ -12,12 +12,12 @@ const TeamPage: FC<TeamPageProps> = () => {
   return (
     <div className={styles.TeamPageContent}>
       <PrimaryAppBar />
+      <TeamMembersAddMemberModal />
       <div className={styles.TeamPage}>
         <div className={styles.tableArea}>
           <TeamMembersTable />
         </div>
       </div>
-      <TeamMembersAddMemberModal />
     </div>
   );
 };

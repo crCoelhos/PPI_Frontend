@@ -18,8 +18,8 @@ const style = {
 
 const buttonStyle = {
   p: 2,
-  marginTop: "12px",
-  marginLeft: "78vw",
+  marginTop: "32px",
+  marginLeft: "40vw",
 };
 
 const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
@@ -28,7 +28,7 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
   const handleClose = () => setOpen(false);
 
   const handleCancel = () => {
-    handleClose(); // Fechar o modal
+    handleClose();
   };
 
   return (

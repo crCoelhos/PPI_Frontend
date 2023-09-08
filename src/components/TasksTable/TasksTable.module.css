@@ -1,1 +1,10 @@
-.TasksTable {}
+.TasksTable {
+}
+
+.ActionButtons {
+  display: flex;
+  flex-direction: row;
+  margin: 12px 0;
+
+  margin-left: 23vw;
+}

@@ -26,9 +26,6 @@ const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
 const defaultTheme = createTheme();
 
-// TODO all the task related functions are ok but need to
-//  do some teaks on expertise relation, as well as in the sending keys
-//  from tasks where customerId comes in play
 interface TaksAddTaskFormProps {
   onCancel: () => void;
 }
@@ -75,7 +72,6 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
-          console.log(tokenValue);
 
           const customerResponse = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,
@@ -102,7 +98,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
           setExpertises(expertiseResponse.data);
         }
 
-        console.log("Request successful:", customers);
+        console.log("Request successful");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error:", error.response?.data);

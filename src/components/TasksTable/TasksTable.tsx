@@ -1,70 +1,35 @@
-import React, { FC, useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  TableSortLabel,
-  Box,
-} from "@mui/material";
-import styles from "./TasksTable.module.css";
+import React, { useEffect, useState } from "react";
 import ApiService from "../../services/api";
-import { Task, TasksHeadCell } from "../../interfaces/types";
+import { Task } from "../../interfaces/types";
+import styles from "./TasksTable.module.css";
+import TaksAddTaskModal from "../TaksAddTaskModal/TaksAddTaskModal";
+import format from "date-fns/format";
 
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
+import { Column } from "primereact/column";
+import Grid from "@mui/material/Grid";
+import ClearIcon from "@mui/icons-material/Clear";
+import Button from "@mui/material/Button";
+import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 
-
-interface TasksTableProps {}
-
-const TasksTable: FC<TasksTableProps> = () => {
-  const [isLoading, setIsLoading] = useState(true);
+function TasksTable() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
   const [orderBy, setOrderBy] = useState<keyof Task>("name");
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [selected, setSelected] = useState<number[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null); // Use selectedTask para armazenar a tarefa selecionada
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const headCells: readonly TasksHeadCell[] = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Nome",
-    },
-    {
-      id: "description",
-      numeric: false,
-      disablePadding: false,
-      label: "Descrição",
-    },
-    {
-      id: "contractDate",
-      numeric: false,
-      disablePadding: false,
-      label: "Data do contrato",
-    },
-    {
-      id: "deadline",
-      numeric: false,
-      disablePadding: false,
-      label: "Prazo Final",
-    },
-    {
-      id: "taskDomain",
-      numeric: false,
-      disablePadding: false,
-      label: "Dominio da atividade",
-    },
-    {
-      id: "isActive",
-      numeric: false,
-      disablePadding: false,
-      label: "Status",
-    },
-  ];
+  // Função para abrir o modal
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
 
-  const visuallyHidden = { visuallyHidden: { display: "none" } };
+  // Função para fechar o modal
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     console.log("Fetching tasks...");
@@ -83,140 +48,84 @@ const TasksTable: FC<TasksTableProps> = () => {
     fetchTasks();
   }, []);
 
-  const createSortHandler = (property: keyof Task) => () => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  function handleDelete() {
+    console.log(selectedTask?.id);
+  }
+
+  const dateTemplate = (rowData: Task) => {
+    return format(new Date(rowData.contractDate), "dd/MM/yyyy");
   };
 
-  type Order = "asc" | "desc";
-
-  const comparator = (a: Task, b: Task) => {
-    if (orderBy === "name") {
-      return order === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    } else if (orderBy === "description") {
-      return order === "asc"
-        ? a.description.localeCompare(b.description)
-        : b.description.localeCompare(a.description);
-    } else if (orderBy === "contractDate") {
-      return order === "asc"
-        ? a.contractDate.localeCompare(b.contractDate)
-        : b.contractDate.localeCompare(a.contractDate);
-    } else if (orderBy === "taskDomain") {
-      return order === "asc"
-        ? a.taskDomain.localeCompare(b.taskDomain)
-        : b.taskDomain.localeCompare(a.taskDomain);
-    } else if (orderBy === "isActive") {
-      return order === "asc"
-        ? a.taskDomain.localeCompare(b.taskDomain)
-        : b.taskDomain.localeCompare(a.taskDomain);
-    }
-    return 0;
+  const statusTemplate = (rowData: Task) => {
+    return rowData.isActive ? "Ativo" : "Inativo";
   };
 
-  const sortedTasks = [...tasks].sort(comparator);
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const selectedIds = sortedTasks.map((task) => task.id);
-      setSelected(selectedIds);
-      return;
-    }
-    setSelected([]);
+  const buttonStyle = {
+    p: 2,
   };
-
-  const handleCheckboxClick = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   return (
-    <TableContainer>
-      <Table className={styles.TasksTable}>
-        <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox">
-              <Checkbox
-                indeterminate={
-                  selected.length > 0 && selected.length < sortedTasks.length
-                }
-                checked={
-                  sortedTasks.length > 0 &&
-                  selected.length === sortedTasks.length
-                }
-                onChange={handleSelectAllClick}
-              />
-            </TableCell>
-            {headCells.map((headCell) => (
-              <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? "right" : "left"}
-                padding={headCell.disablePadding ? "none" : "normal"}
-                sortDirection={orderBy === headCell.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ? (
-                    <Box component="span" sx={visuallyHidden}></Box>
-                  ) : null}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedTasks.map((task) => (
-            <TableRow
-              key={task.id}
-              hover
-              role="checkbox"
-              tabIndex={-1}
-              selected={isSelected(task.id)}
-            >
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={isSelected(task.id)}
-                  onChange={(event) => handleCheckboxClick(event, task.id)}
-                />
-              </TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              <TableCell>{task.contractDate}</TableCell>
-              <TableCell>{task.deadline}</TableCell>
-              <TableCell>{task.taskDomain}</TableCell>
-              <TableCell>{task.isActive ? "Ativo" : "Inativo"}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div>
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6} sm={6}>
+          <GenericDeleteModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            onDelete={handleDelete}
+            isOpen={true}
+            itemClass="task"
+            itemId={selectedTask?.id}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} sm={6}>
+          <TaksAddTaskModal />
+        </Grid>
+      </Grid>
+
+      <div className="p-inputgroup">
+        <span className="p-inputgroup-addon">
+          <i className="pi pi-search" />
+        </span>
+        <InputText
+          type="text"
+          placeholder="Buscar tarefas"
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+        />
+      </div>
+
+      <DataTable
+        value={tasks}
+        globalFilter={globalFilter}
+        emptyMessage="Nenhuma tarefa encontrada"
+        selectionMode="single"
+        selection={selectedTask}
+        onSelectionChange={(e) => setSelectedTask(e.value as Task | null)}
+      >
+        <Column field="name" header="Nome" sortable />
+        <Column field="description" header="Descrição" sortable />
+        <Column
+          field="contractDate"
+          header="Data do contrato"
+          body={dateTemplate}
+          sortable
+        />
+        <Column
+          field="deadline"
+          header="Prazo Final"
+          body={dateTemplate}
+          sortable
+        />
+        <Column field="taskDomain" header="Domínio da atividade" sortable />
+        <Column
+          field="isActive"
+          header="Status"
+          body={statusTemplate}
+          sortable
+        />
+      </DataTable>
+    </div>
   );
-};
+}
 
 export default TasksTable;

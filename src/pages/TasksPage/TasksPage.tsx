@@ -9,12 +9,11 @@ interface TasksPageProps {}
 const TasksPage: FC<TasksPageProps> = () => (
   <div className={styles.TasksPageContent}>
     <PrimaryAppBar />
-    <div className={styles.TasksPage}>
-      <div className={styles.tableArea}>
-        <TasksTable />
-      </div>
-    </div>
     <TaksAddTaskModal />
+    <div className={styles.TasksPage}>
+      <TasksTable />
+      <div className={styles.tableArea}></div>
+    </div>
   </div>
 );
 

@@ -12,9 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 import IconButton from "@mui/material/IconButton";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import HomeIcon from "@mui/icons-material/Home";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";

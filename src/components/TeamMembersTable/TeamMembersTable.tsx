@@ -77,7 +77,6 @@ const TeamMembersTable: FC<TeamMembersTableProps> = () => {
           });
 
           setUsers(response.data);
-          console.log("Users fetched:", response.data);
         }
       } catch (error) {
         console.error(error);
