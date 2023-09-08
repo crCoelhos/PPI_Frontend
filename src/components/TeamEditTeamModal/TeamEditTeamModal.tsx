@@ -1,11 +1,10 @@
 import React, { FC } from "react";
-import styles from "./TasksEditTaskModal.module.css";
+import styles from "./TeamEditTeamModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import TaksAddTaskForm from "../TaksAddTaskForm/TaksAddTaskForm";
 import EditIcon from "@mui/icons-material/Add";
-import TasksEditTaskForm from "../TasksEditTaskForm/TasksEditTaskForm";
+import TeamEditTeamForm from "../TeamEditTeamForm/TeamEditTeamModal";
 
-interface TasksEditTaskModalProps {
+interface TeamEditTeamModalProps {
   open: boolean;
   onClose: () => void;
   itemId: string | number | undefined;
@@ -25,7 +24,7 @@ const buttonStyle = {
   p: 2,
 };
 
-const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
+const TeamEditTeamModal: FC<TeamEditTeamModalProps> = ({
   onClose,
   itemId,
   isOpen,
@@ -57,7 +56,7 @@ const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <TasksEditTaskForm onCancel={handleCancel} itemId={itemId} />
+            <TeamEditTeamForm onCancel={handleCancel} itemId={itemId} />
           </Box>
         </Modal>
       </div>
@@ -65,4 +64,4 @@ const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
   );
 };
 
-export default TasksEditTaskModal;
+export default TeamEditTeamModal;

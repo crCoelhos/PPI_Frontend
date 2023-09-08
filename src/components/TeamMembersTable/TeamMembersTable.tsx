@@ -14,6 +14,7 @@ import Grid from "@mui/material/Grid";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
+import TeamEditTaskModal from "../TeamEditTeamModal/TeamEditTeamModal";
 
 function TasksTable() {
   const [users, setUsers] = useState<UserData[]>([]);
@@ -68,7 +69,11 @@ function TasksTable() {
   };
 
   const statusTemplate = (rowData: UserData) => {
-    return rowData.is_active ? "Ativo" : "Inativo";
+    return rowData.is_active ? (
+      <Tag value="Ativo" rounded />
+    ) : (
+      <Tag severity="danger" value="Inativo" rounded />
+    );
   };
 
   const expertiseTemplate = (rowData: { expertiseId: number }) => {
@@ -97,7 +102,6 @@ function TasksTable() {
     }
   };
 
-  
   return (
     <div>
       <Grid container spacing={1}>
@@ -108,6 +112,14 @@ function TasksTable() {
             onDelete={handleDelete}
             isOpen={true}
             itemClass="user"
+            itemId={selectedUser?.id}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} sm={6}>
+          <TeamEditTaskModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            isOpen={true}
             itemId={selectedUser?.id}
           />
         </Grid>
@@ -134,7 +146,7 @@ function TasksTable() {
         onSelectionChange={(e) => setSelectedUser(e.value as UserData | null)}
       >
         <Column field="name" header="Nome" sortable />
-        <Column field="description" header="Descrição" sortable />
+        <Column field="contact" header="Contato" sortable />
         <Column field="email" header="Email" sortable />
         <Column
           field="hireDate"

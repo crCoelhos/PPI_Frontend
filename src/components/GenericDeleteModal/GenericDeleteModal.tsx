@@ -82,6 +82,7 @@ const GenericDeleteModal: React.FC<GenericDeleteModalProps> = ({
           onClick={handleDelete}
           sx={buttonStyle}
           variant="outlined"
+          color="error"
           startIcon={<ClearIcon />}
         >
           Excluir seleção
@@ -100,15 +101,16 @@ const GenericDeleteModal: React.FC<GenericDeleteModalProps> = ({
               <p>Deseja realmente excluir este item?</p>
               <Button
                 onClick={handleDeleteConfirmation}
-                variant="contained"
-                color="primary"
+                variant="outlined"
+                color="error"
+                
               >
                 Excluir
               </Button>
               <Button
                 onClick={() => setIsOpen(false)}
-                variant="outlined"
-                color="secondary"
+                variant="contained"
+                color="primary"
               >
                 Cancelar
               </Button>
