@@ -67,18 +67,20 @@ export interface CustomersHeadCell {
 }
 
 export interface Task {
-  id: number;
-  name: string;
-  description: string;
   contractDate: string;
   contractDocument: string | null;
-  startDate: string;
-  deadline: string;
-  updatedDeadline: string | null;
-  taskDomain: string;
-  isActive: boolean;
   createdAt: string;
+  customerId: number;
+  deadline: string;
+  description: string;
+  id: number;
+  isActive: boolean;
+  name: string;
+  startDate: string;
+  taskDomain: string;
+  taskStatus: string;
   updatedAt: string;
+  updatedDeadline: string | null;
 }
 
 export interface TasksHeadCell {

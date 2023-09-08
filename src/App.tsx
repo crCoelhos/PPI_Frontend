@@ -39,9 +39,8 @@ function App() {
   );
 }
 
-// TODO MELHORAR VISUALIZAÇÃO DAS TABELAS
-// TODO CRIAR COMPONENTE DE CRUD NAS PAGINAS DE EXIBIÇÃO
-// TODO CRIAR COMPONENTE EM MODAL PARA INSERÇÃO DE NOVOS USUARIOS, TAREFAS E CLIENTES
-// TODO CRIAR COMPONENTE E TABELA DE CLIENTES
+// TODO replicar o modal de edição do tasks para todos os outros
+// TODO ajustar o botão de edit ^
+
 
 export default App;

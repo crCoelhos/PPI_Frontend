@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "./TaksAddTaskForm.module.css";
+import React, { FC } from "react";
+import styles from "./TasksEditTaskForm.module.css";
 import { ThemeProvider } from "@emotion/react";
+import ApiService from "../../services/api";
 import {
   Grid,
   Box,
@@ -14,28 +15,33 @@ import {
   Button,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import EditIcon from "@mui/icons-material/Edit";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import TaskController from "../../controllers/taskController";
 import axios from "axios";
-import { CustomerData, ExpertiseData } from "../../interfaces/types";
+import { CustomerData, ExpertiseData, Task } from "../../interfaces/types";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
 const defaultTheme = createTheme();
 
-interface TaksAddTaskFormProps {
+interface TasksEditTaskFormProps {
   onCancel: () => void;
+  itemId: string | number | undefined;
 }
 
-
-const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
+const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
+  onCancel,
+  itemId,
+}) => {
   const [customers, setCustomers] = React.useState<CustomerData[]>([]);
   const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
+  const [task, setTask] = React.useState<Task>();
   const [selectedTaskDomain, setSelectedTaskDomain] = React.useState("");
   const [selectedCustomer, setSelectedCustomer] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const {
     name,
@@ -58,7 +64,6 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
     setIsActive,
     customerId,
     setCustomerId,
-    handleSubmit,
   } = TaskController();
 
   React.useEffect(() => {
@@ -71,6 +76,19 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
+
+          const taskResponse = await axios.get(
+            `${appURL}admin/task/${itemId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: tokenValue,
+                Access: accessValue,
+              },
+            }
+          );
+
+          setTask(taskResponse.data.task);
 
           const customerResponse = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,
@@ -96,8 +114,6 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
           );
           setExpertises(expertiseResponse.data);
         }
-
-        console.log("Request successful");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error:", error.response?.data);
@@ -109,6 +125,33 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
 
     fetchUsers();
   }, []);
+
+  const handleSubmit = async () => {
+    let tokenValue: string = "";
+    let accessValue: string = accessHeaderValue || " ";
+
+    const storedToken =
+      localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (storedToken) {
+      const tokenObject = JSON.parse(storedToken);
+      tokenValue = tokenObject.token;
+
+      try {
+        await axios.put(`${appURL}admin/task/${task?.id}`, task, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: tokenValue,
+            Access: accessValue,
+          },
+        });
+
+        console.log("Tarefa atualizada com sucesso!");
+      } catch (error) {
+        // Lide com erros aqui
+        console.error("Erro ao atualizar a tarefa:", error);
+      }
+    }
+  };
 
   return (
     <div className={styles.TeamMembersAddMemberForm}>
@@ -123,10 +166,10 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-              <AssignmentIcon />
+              <EditIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Cadastrar atividade
+              Editar atividade
             </Typography>
             <Box
               component="form"
@@ -145,25 +188,61 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     label="Titulo da atividade"
                     name="name"
                     autoComplete="taskTitle"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={task?.name ?? ""}
+                    onChange={(e) => {
+                      setTask((prevTask: any) => ({
+                        ...prevTask,
+                        name: e.target.value,
+                      }));
+                    }}
                     autoFocus
                   />
-
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de início"
+                      value={task?.startDate ? dayjs(task.startDate) : null}
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
-                          setStartDate(newDate.format("YYYY-MM-DD"));
+                          const formattedDate = newDate.format("YYYY-MM-DD");
+                          setTask((prevTask: any) => ({
+                            ...prevTask,
+                            startDate: formattedDate,
+                          }));
+                          setStartDate(formattedDate);
                         } else {
+                          setTask((prevTask: any) => ({
+                            ...prevTask,
+                            startDate: null,
+                          }));
                           setStartDate("");
                         }
                       }}
                     />
                   </LocalizationProvider>
 
-                  <InputLabel id="domain-select-label">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DesktopDatePicker
+                      label="Prazo final"
+                      value={task?.deadline ? dayjs(task.deadline) : null}
+                      onChange={(newDate: Dayjs | null) => {
+                        if (newDate) {
+                          const formattedDate = newDate.format("YYYY-MM-DD");
+                          setTask((prevTask: any) => ({
+                            ...prevTask,
+                            deadline: formattedDate,
+                          }));
+                          setDeadline(formattedDate);
+                        } else {
+                          setTask((prevTask: any) => ({
+                            ...prevTask,
+                            deadline: null,
+                          }));
+                          setDeadline("");
+                        }
+                      }}
+                    />
+                  </LocalizationProvider>
+                  {/* <InputLabel id="domain-select-label">
                     Dominio da atividade
                   </InputLabel>
                   <Select
@@ -182,19 +261,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                         {expertise.name}
                       </MenuItem>
                     ))}
-                  </Select>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DesktopDatePicker
-                      label="Data do contrato"
-                      onChange={(newDate: Dayjs | null) => {
-                        if (newDate) {
-                          setContractDate(newDate.format("YYYY-MM-DD"));
-                        } else {
-                          setContractDate("");
-                        }
-                      }}
-                    />
-                  </LocalizationProvider>
+                  </Select> */}
                 </Grid>
                 {/* /COLUNA1 */}
 
@@ -210,42 +277,36 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                     id="description"
                     label="Descrição"
                     name="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={task?.description ?? ""}
+                    onChange={(e) => {
+                      setTask((prevTask: any) => ({
+                        ...prevTask,
+                        description: e.target.value,
+                      }));
+                    }}
                   />
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DesktopDatePicker
-                      label="Data limite"
-                      onChange={(newDate: Dayjs | null) => {
-                        if (newDate) {
-                          setDeadline(newDate.format("YYYY-MM-DD"));
-                        } else {
-                          setDeadline("");
-                        }
-                      }}
-                    />
-                  </LocalizationProvider>
-
-                  <InputLabel id="customer-select-label">
-                    Oriem da atividade
+                  <InputLabel id="taskStatus-select-label">
+                    Status da Tarefa
                   </InputLabel>
                   <Select
-                    className={styles.SelectOptions}
-                    labelId="customer-select-label"
-                    id="customerId"
-                    value={selectedCustomer}
-                    label="customerId"
+                    labelId="taskStatus-select-label"
+                    id="taskStatus"
+                    value={task?.taskStatus ?? ""}
                     onChange={(e) => {
-                      setSelectedCustomer(e.target.value);
-                      setCustomerId(e.target.value);
+                      setTask((prevTask: any) => ({
+                        ...prevTask,
+                        taskStatus: e.target.value,
+                      }));
                     }}
                   >
-                    {customers.map((customer) => (
-                      <MenuItem key={customer.id} value={Number(customer.id)}>
-                        {customer.businessName}
-                      </MenuItem>
-                    ))}
+                    <MenuItem value="TODO">TODO</MenuItem>
+                    <MenuItem value="WAITING">WAITING</MenuItem>
+                    <MenuItem value="INPROGRESS">IN PROGRESS</MenuItem>
+                    <MenuItem value="PAUSED">PAUSED</MenuItem>
+                    <MenuItem value="CANCELED">CANCELED</MenuItem>
+                    <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+                    <MenuItem value="OVERDUE">OVERDUE</MenuItem>
                   </Select>
                 </Grid>
                 {/* /COLUNA2 */}
@@ -279,7 +340,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                   }}
                 >
                   <Button type="submit" fullWidth variant="contained">
-                    Registrar
+                    Atualizar
                   </Button>
                 </Grid>
               </Grid>
@@ -290,5 +351,4 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
     </div>
   );
 };
-
-export default TaksAddTaskForm;
+export default TasksEditTaskForm;

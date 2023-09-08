@@ -8,10 +8,6 @@ import ApiService from "../../services/api";
 
 interface TeamPageProps {}
 
-const LazyTeamMembersTable = React.lazy(
-  () => import("../../components/TeamMembersTable/TeamMembersTable")
-);
-
 const TeamPage: FC<TeamPageProps> = () => {
   return (
     <div className={styles.TeamPageContent}>
@@ -19,7 +15,7 @@ const TeamPage: FC<TeamPageProps> = () => {
       <TeamMembersAddMemberModal />
       <div className={styles.TeamPage}>
         <React.Suspense fallback={<div>Carregando...</div>}>
-          <LazyTeamMembersTable />
+          <TeamMembersTable />
         </React.Suspense>
       </div>
     </div>

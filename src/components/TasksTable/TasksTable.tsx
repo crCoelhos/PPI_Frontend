@@ -13,6 +13,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 import { Tag } from "primereact/tag";
+import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
 
 function TasksTable() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -68,17 +69,51 @@ function TasksTable() {
 
   const statusTemplate = (rowData: Task) => {
     return rowData.isActive ? (
-      <Tag
-        value='Ativo'
-        rounded
-      />
+      <Tag value="Ativo" rounded />
     ) : (
-      <Tag
-        severity="danger"
-        value='Inativo'
-        rounded
-      />
+      <Tag severity="danger" value="Inativo" rounded />
     );
+  };
+
+  const taskStatusTemplate = (rowData: Task) => {
+    let statusColor:
+      | "success"
+      | "info"
+      | "warning"
+      | "danger"
+      | null
+      | undefined = null;
+    let statusText = "";
+
+    switch (rowData.taskStatus) {
+      case "TODO":
+        statusColor = "success";
+        statusText = rowData.taskStatus;
+        break;
+      case "WAITING":
+      case "PAUSED":
+        statusColor = "warning";
+        statusText = rowData.taskStatus;
+        break;
+      case "CANCELED":
+      case "OVERDUE":
+        statusColor = "danger";
+        statusText = rowData.taskStatus;
+        break;
+      case "INPROGRESS":
+        statusColor = "info";
+        statusText = rowData.taskStatus;
+        break;
+      case "COMPLETED":
+        statusColor = "success";
+        statusText = rowData.taskStatus;
+        break;
+      default:
+        // Você pode adicionar um tratamento adicional aqui para outros status não especificados.
+        break;
+    }
+
+    return <Tag severity={statusColor} value={statusText} rounded />;
   };
 
   const expertiseTemplate = (rowData: { taskDomain: number }) => {
@@ -117,6 +152,14 @@ function TasksTable() {
             onDelete={handleDelete}
             isOpen={true}
             itemClass="task"
+            itemId={selectedTask?.id}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} sm={6}>
+          <TasksEditTaskModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            isOpen={true}
             itemId={selectedTask?.id}
           />
         </Grid>
@@ -161,6 +204,13 @@ function TasksTable() {
           field="taskDomain"
           header="Domínio da atividade"
           body={expertiseTemplate}
+          sortable
+        />
+
+        <Column
+          field="taskStatus"
+          header="taskStatus"
+          body={taskStatusTemplate}
           sortable
         />
 
