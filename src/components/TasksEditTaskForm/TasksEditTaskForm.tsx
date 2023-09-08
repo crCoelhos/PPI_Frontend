@@ -154,15 +154,14 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   };
 
   return (
-    <div className={styles.TeamMembersAddMemberForm}>
+    <div className={styles.TasksEditTaskForm}>
       <ThemeProvider theme={defaultTheme}>
-        <Grid item xs={12} sm={8} md={5}>
+        <Grid item sx={{ p: 2 }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              p: 4,
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
@@ -177,7 +176,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
-              <Grid container spacing={2}>
+              <Grid container>
                 {/* COLUNA1 */}
                 <Grid item xs={12} sm={6}>
                   <TextField

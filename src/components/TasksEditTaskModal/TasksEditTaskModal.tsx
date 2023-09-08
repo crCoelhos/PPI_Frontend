@@ -17,15 +17,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 900,
   bgcolor: "background.paper",
   p: 2,
 };
 
 const buttonStyle = {
   p: 2,
-  marginTop: "32px",
-  marginLeft: "40vw",
 };
 
 const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({

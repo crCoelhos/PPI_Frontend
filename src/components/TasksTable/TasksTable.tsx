@@ -144,8 +144,8 @@ function TasksTable() {
 
   return (
     <div>
-      <Grid container spacing={1}>
-        <Grid item xs={12} md={6} sm={6}>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
           <GenericDeleteModal
             open={isDeleteModalOpen}
             onClose={closeDeleteModal}
@@ -155,7 +155,7 @@ function TasksTable() {
             itemId={selectedTask?.id}
           />
         </Grid>
-        <Grid item xs={12} md={6} sm={6}>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
           <TasksEditTaskModal
             open={isDeleteModalOpen}
             onClose={closeDeleteModal}
