@@ -131,9 +131,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
     fetchUsers();
   }, []);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
@@ -261,11 +259,16 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
                     className={styles.SelectOptions}
                     labelId="customer-select-label"
                     id="userDomain"
-                    value={user?.expertiseId ? user.expertiseId.toString() : ""} // Defina um valor padrão aqui
+                    value={user?.expertiseId ? user.expertiseId.toString() : ""}
                     label="Dominio"
                     onChange={(e) => {
-                      setSelectedExpertise(e.target.value);
-                      setExpertiseId(e.target.value.toString());
+                      const selectedExpertiseId = e.target.value;
+                      setUser((prevUser: any) => ({
+                        ...prevUser,
+                        expertiseId: selectedExpertiseId, // Atualize o expertiseId de user
+                      }));
+                      setExpertiseId(selectedExpertiseId); // Atualize o expertiseId separadamente, se necessário
+                      console.log(selectedExpertiseId);
                     }}
                   >
                     {expertises.map((expertise) => (
