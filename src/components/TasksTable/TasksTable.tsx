@@ -109,7 +109,6 @@ function TasksTable() {
         statusText = rowData.taskStatus;
         break;
       default:
-        // Você pode adicionar um tratamento adicional aqui para outros status não especificados.
         break;
     }
 
