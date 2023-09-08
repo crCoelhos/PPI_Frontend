@@ -8,15 +8,19 @@ import ApiService from "../../services/api";
 
 interface TeamPageProps {}
 
+const LazyTeamMembersTable = React.lazy(
+  () => import("../../components/TeamMembersTable/TeamMembersTable")
+);
+
 const TeamPage: FC<TeamPageProps> = () => {
   return (
     <div className={styles.TeamPageContent}>
       <PrimaryAppBar />
       <TeamMembersAddMemberModal />
       <div className={styles.TeamPage}>
-        <div className={styles.tableArea}>
-          <TeamMembersTable />
-        </div>
+        <React.Suspense fallback={<div>Carregando...</div>}>
+          <LazyTeamMembersTable />
+        </React.Suspense>
       </div>
     </div>
   );

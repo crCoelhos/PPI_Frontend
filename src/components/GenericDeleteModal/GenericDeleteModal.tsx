@@ -48,7 +48,6 @@ const GenericDeleteModal: React.FC<GenericDeleteModalProps> = ({
   const [deleteConfirmation, setDeleteConfirmation] = React.useState(false);
 
   const handleDelete = () => {
-    // Abra o modal quando o botão "Excluir seleção" for clicado
     setIsOpen(true);
   };
 

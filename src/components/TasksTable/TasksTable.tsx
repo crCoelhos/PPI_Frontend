@@ -21,12 +21,10 @@ function TasksTable() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null); // Use selectedTask para armazenar a tarefa selecionada
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Função para abrir o modal
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };
 
-  // Função para fechar o modal
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
@@ -48,8 +46,21 @@ function TasksTable() {
     fetchTasks();
   }, []);
 
-  function handleDelete() {
-    console.log(selectedTask?.id);
+  async function handleDelete() {
+    if (selectedTask?.id) {
+      try {
+        // Realize a exclusão no servidor (você já tem esse código)
+
+        // Após a exclusão bem-sucedida, atualize a lista de tarefas
+        const updatedTasks = tasks.filter((task) => task.id !== selectedTask.id);
+        setTasks(updatedTasks);
+
+        // Feche o modal de exclusão
+        closeDeleteModal();
+      } catch (error) {
+        console.error("Erro ao excluir a tarefa:", error);
+      }
+    }
   }
 
   const dateTemplate = (rowData: Task) => {
@@ -76,9 +87,6 @@ function TasksTable() {
             itemClass="task"
             itemId={selectedTask?.id}
           />
-        </Grid>
-        <Grid item xs={12} md={6} sm={6}>
-          <TaksAddTaskModal />
         </Grid>
       </Grid>
 

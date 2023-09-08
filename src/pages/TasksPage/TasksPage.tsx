@@ -6,12 +6,18 @@ import TaksAddTaskModal from "../../components/TaksAddTaskModal/TaksAddTaskModal
 
 interface TasksPageProps {}
 
+const LazyTasksTable = React.lazy(
+  () => import("../../components/TasksTable/TasksTable")
+);
+
 const TasksPage: FC<TasksPageProps> = () => (
   <div className={styles.TasksPageContent}>
     <PrimaryAppBar />
     <TaksAddTaskModal />
     <div className={styles.TasksPage}>
-      <TasksTable />
+      <React.Suspense fallback={<div>Carregando...</div>}>
+        <TasksTable />
+      </React.Suspense>
       <div className={styles.tableArea}></div>
     </div>
   </div>
