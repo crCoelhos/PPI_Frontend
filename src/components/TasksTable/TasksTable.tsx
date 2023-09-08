@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
+import { Tag } from "primereact/tag";
 
 function TasksTable() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -49,13 +50,11 @@ function TasksTable() {
   async function handleDelete() {
     if (selectedTask?.id) {
       try {
-        // Realize a exclusão no servidor (você já tem esse código)
-
-        // Após a exclusão bem-sucedida, atualize a lista de tarefas
-        const updatedTasks = tasks.filter((task) => task.id !== selectedTask.id);
+        const updatedTasks = tasks.filter(
+          (task) => task.id !== selectedTask.id
+        );
         setTasks(updatedTasks);
 
-        // Feche o modal de exclusão
         closeDeleteModal();
       } catch (error) {
         console.error("Erro ao excluir a tarefa:", error);
@@ -68,11 +67,44 @@ function TasksTable() {
   };
 
   const statusTemplate = (rowData: Task) => {
-    return rowData.isActive ? "Ativo" : "Inativo";
+    return rowData.isActive ? (
+      <Tag
+        value='Ativo'
+        rounded
+      />
+    ) : (
+      <Tag
+        severity="danger"
+        value='Inativo'
+        rounded
+      />
+    );
   };
 
-  const buttonStyle = {
-    p: 2,
+  const expertiseTemplate = (rowData: { taskDomain: number }) => {
+    const expertiseMap: { [key: number]: { name: string; color: string } } = {
+      1: { name: "Design", color: "#FF6600" },
+      2: { name: "Filmagem", color: "#00CC66" },
+      3: { name: "Fotografia", color: "#9900CC" },
+      4: { name: "Edição", color: "#FF3399" },
+      5: { name: "Desenvolvimento", color: "#3366FF" },
+      6: { name: "Roteiro", color: "#FF9933" },
+      7: { name: "Consultoria", color: "#996633" },
+    };
+
+    if (rowData.taskDomain in expertiseMap) {
+      const expertiseName = expertiseMap[rowData.taskDomain];
+      return (
+        <Tag
+          severity="success"
+          value={expertiseName.name}
+          rounded
+          style={{ background: `${expertiseName.color}` }}
+        />
+      );
+    } else {
+      return "Desconhecido";
+    }
   };
 
   return (
@@ -124,7 +156,14 @@ function TasksTable() {
           body={dateTemplate}
           sortable
         />
-        <Column field="taskDomain" header="Domínio da atividade" sortable />
+
+        <Column
+          field="taskDomain"
+          header="Domínio da atividade"
+          body={expertiseTemplate}
+          sortable
+        />
+
         <Column
           field="isActive"
           header="Status"

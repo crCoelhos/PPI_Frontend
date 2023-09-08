@@ -1,233 +1,163 @@
-import React, { FC, useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  TableSortLabel,
-  Box,
-} from "@mui/material";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import styles from "./TeamMembersTable.module.css";
-import { HeadCell, UserData } from "../../interfaces/types";
+import React, { useEffect, useState } from "react";
+import ApiService from "../../services/api";
+import { Task, User, UserData } from "../../interfaces/types";
+import styles from "./TasksTable.module.css";
+import TaksAddTaskModal from "../TaksAddTaskModal/TaksAddTaskModal";
+import format from "date-fns/format";
 
-const appURL = process.env.REACT_APP_SERVER_URL;
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
+import { Column } from "primereact/column";
+import { Tag } from "primereact/tag";
 
-interface TeamMembersTableProps {}
+import Grid from "@mui/material/Grid";
+import ClearIcon from "@mui/icons-material/Clear";
+import Button from "@mui/material/Button";
+import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 
-const TeamMembersTable: FC<TeamMembersTableProps> = () => {
-  const [orderBy, setOrderBy] = useState<keyof UserData>("name");
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [selected, setSelected] = useState<number[]>([]);
-
+function TasksTable() {
   const [users, setUsers] = useState<UserData[]>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [orderBy, setOrderBy] = useState<keyof UserData>("name");
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const headCells: readonly HeadCell[] = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Name",
-    },
-    {
-      id: "email",
-      numeric: false,
-      disablePadding: false,
-      label: "Email",
-    },
-    {
-      id: "contact",
-      numeric: false,
-      disablePadding: false,
-      label: "Contact",
-    },
-    {
-      id: "expertiseId",
-      numeric: true,
-      disablePadding: false,
-      label: "Expertise",
-    },
-    {
-      id: "is_active",
-      numeric: false,
-      disablePadding: false,
-      label: "Status",
-    },
-    // aqui
-  ];
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
 
-  const visuallyHidden = { visuallyHidden: { display: "none" } };
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    console.log("Fetching users...");
+    const fetchTasks = async () => {
       try {
-        const storedToken =
-          localStorage.getItem("user") || sessionStorage.getItem("user");
-        if (storedToken) {
-          const tokenObject = JSON.parse(storedToken);
-          const tokenValue = tokenObject.token;
-
-          const response = await axios.get(`${appURL}admin/users/`, {
-            headers: {
-              Authorization: `${tokenValue}`,
-            },
-          });
-
-          setUsers(response.data);
-        }
+        const res = await ApiService.fetchData<UserData[]>("admin/users/");
+        setUsers(res);
+        setIsLoading(false);
+        console.log("users fetched:", res);
       } catch (error) {
         console.error(error);
-        console.log("Token ????????? erro");
+        setIsLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchTasks();
   }, []);
 
-  // if (!loading) {
-  //   window.location.reload();
-  // }
+  async function handleDelete() {
+    if (selectedUser?.id) {
+      try {
+        const updatedUsers = users.filter(
+          (users) => users.id !== selectedUser.id
+        );
+        setUsers(updatedUsers);
 
-  const createSortHandler = (property: keyof UserData) => () => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  type Order = "asc" | "desc";
-
-  const comparator = (a: UserData, b: UserData) => {
-    if (orderBy === "name") {
-      return order === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    } else if (orderBy === "email") {
-      return order === "asc"
-        ? a.email.localeCompare(b.email)
-        : b.email.localeCompare(a.email);
-    } else if (orderBy === "contact") {
-      return order === "asc"
-        ? a.contact.localeCompare(b.contact)
-        : b.contact.localeCompare(a.contact);
-    } else if (orderBy === "expertiseId") {
-      return order === "asc"
-        ? a.expertiseId - b.expertiseId
-        : b.expertiseId - a.expertiseId;
-    } else if (orderBy === "is_active") {
-      return order === "asc"
-        ? a.expertiseId - b.expertiseId
-        : b.expertiseId - a.expertiseId;
+        closeDeleteModal();
+      } catch (error) {
+        console.error("Erro ao excluir usuário:", error);
+      }
     }
-    return 0;
+  }
+
+  const hireDateTemplate = (rowData: UserData) => {
+    return format(new Date(rowData.hireDate), "dd/MM/yyyy");
   };
 
-  const sortedUsers = [...users].sort(comparator);
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const selectedIds = sortedUsers.map((user) => user.id);
-      setSelected(selectedIds);
-      return;
-    }
-    setSelected([]);
+  const statusTemplate = (rowData: UserData) => {
+    return rowData.is_active ? "Ativo" : "Inativo";
   };
 
-  const handleCheckboxClick = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
+  const expertiseTemplate = (rowData: { expertiseId: number }) => {
+    const expertiseMap: { [key: number]: { name: string; color: string } } = {
+      1: { name: "Design", color: "#FF6600" },
+      2: { name: "Filmagem", color: "#00CC66" },
+      3: { name: "Fotografia", color: "#9900CC" },
+      4: { name: "Edição", color: "#FF3399" },
+      5: { name: "Desenvolvimento", color: "#3366FF" },
+      6: { name: "Roteiro", color: "#FF9933" },
+      7: { name: "Consultoria", color: "#996633" },
+    };
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+    if (rowData.expertiseId in expertiseMap) {
+      const expertiseName = expertiseMap[rowData.expertiseId];
+      return (
+        <Tag
+          severity="success"
+          value={expertiseName.name}
+          rounded
+          style={{ background: `${expertiseName.color}` }}
+        />
       );
+    } else {
+      return "Desconhecido";
     }
-
-    setSelected(newSelected);
   };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
+  
   return (
-    <TableContainer>
-      {users.length > 0 ? ( // Verifica se há dados carregados
-        <Table className={styles.TeamMembersTable}>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 && selected.length < sortedUsers.length
-                  }
-                  checked={
-                    sortedUsers.length > 0 &&
-                    selected.length === sortedUsers.length
-                  }
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              {headCells.map((headCell) => (
-                <TableCell
-                  key={headCell.id}
-                  align={headCell.numeric ? "right" : "left"}
-                  padding={headCell.disablePadding ? "none" : "normal"}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                >
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={createSortHandler(headCell.id)}
-                  >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <Box component="span" sx={visuallyHidden}></Box>
-                    ) : null}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedUsers.map((user) => (
-              <TableRow
-                key={user.id}
-                hover
-                role="checkbox"
-                tabIndex={-1}
-                selected={isSelected(user.id)}
-              >
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={isSelected(user.id)}
-                    onChange={(event) => handleCheckboxClick(event, user.id)}
-                  />
-                </TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.contact}</TableCell>
-                <TableCell align="right">{user.expertiseId}</TableCell>
-                <TableCell>{!user.is_active ? "Inativo" : "Ativo"}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </TableContainer>
-  );
-};
+    <div>
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6} sm={6}>
+          <GenericDeleteModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            onDelete={handleDelete}
+            isOpen={true}
+            itemClass="user"
+            itemId={selectedUser?.id}
+          />
+        </Grid>
+      </Grid>
 
-export default TeamMembersTable;
+      <div className="p-inputgroup">
+        <span className="p-inputgroup-addon">
+          <i className="pi pi-search" />
+        </span>
+        <InputText
+          type="text"
+          placeholder="Buscar tarefas"
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+        />
+      </div>
+
+      <DataTable
+        value={users}
+        globalFilter={globalFilter}
+        emptyMessage="Nenhuma tarefa encontrada"
+        selectionMode="single"
+        selection={selectedUser}
+        onSelectionChange={(e) => setSelectedUser(e.value as UserData | null)}
+      >
+        <Column field="name" header="Nome" sortable />
+        <Column field="description" header="Descrição" sortable />
+        <Column field="email" header="Email" sortable />
+        <Column
+          field="hireDate"
+          header="Data de contratação"
+          body={hireDateTemplate}
+          sortable
+        />
+        <Column
+          field="taskDomain"
+          header="Domínio da atividade"
+          body={expertiseTemplate}
+          sortable
+        />
+        <Column
+          field="isActive"
+          header="Status"
+          body={statusTemplate}
+          sortable
+        />
+      </DataTable>
+    </div>
+  );
+}
+
+export default TasksTable;
+// NOME EMAIL CONTATO EXPERTISE STATUS
