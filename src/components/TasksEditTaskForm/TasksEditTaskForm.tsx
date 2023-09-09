@@ -48,9 +48,15 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   const [isLoading, setIsLoading] = React.useState(true);
   const [task, setTask] = React.useState<Task | undefined>(undefined);
   const [users, setUsers] = React.useState<UserData[]>([]);
+  // const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
+  //   task && task.usertask.length > 0 ? task.usertask[0].userId : ""
+  // );
   const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
-    task && task.usertask.length > 0 ? task.usertask[0].userId : ""
+    ""
   );
+  const [previousSelectedUserId, setPreviousSelectedUserId] = React.useState<
+    number | string
+  >("");
 
   const {
     name,
@@ -151,7 +157,6 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   }, []);
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
@@ -162,6 +167,24 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
       tokenValue = tokenObject.token;
 
       try {
+        if (selectedUserId !== previousSelectedUserId) {
+          await axios.put(
+            `${appURL}admin/UserTask/${task?.id}`,
+            { userId: selectedUserId },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: tokenValue,
+                Access: accessValue,
+              },
+            }
+          );
+          console.log(
+            "Associação da tarefa com o usuário atualizada com sucesso!"
+          );
+        }
+
+        // Resto do código de atualização da tarefa
         await axios.put(`${appURL}admin/task/${task?.id}`, task, {
           headers: {
             "Content-Type": "application/json",
@@ -172,12 +195,10 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
 
         console.log("Tarefa atualizada com sucesso!");
       } catch (error) {
-        // Lide com erros aqui
         console.error("Erro ao atualizar a tarefa:", error);
       }
     }
   };
-
   return (
     <div className={styles.TasksEditTaskForm}>
       <ThemeProvider theme={defaultTheme}>
