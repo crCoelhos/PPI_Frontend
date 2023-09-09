@@ -76,6 +76,16 @@ function TasksTable() {
     );
   };
 
+  const roleTemplate = (rowData: UserData) => {
+    if (rowData.role.name === "ADMIN") {
+      return <Tag severity="danger" value={rowData.role.name} rounded />;
+    } else if (rowData.role.name === "TESTE") {
+      return <Tag severity="success" value={rowData.role.name} rounded />;
+    } else if (rowData.role.name === "FUNCIONARIO") {
+      return <Tag severity="success" value={rowData.role.name} rounded />;
+    }
+  };
+
   const expertiseTemplate = (rowData: { expertiseId: number }) => {
     const expertiseMap: { [key: number]: { name: string; color: string } } = {
       1: { name: "Design", color: "#FF6600" },
@@ -131,7 +141,7 @@ function TasksTable() {
         </span>
         <InputText
           type="text"
-          placeholder="Buscar tarefas"
+          placeholder="Buscar"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
         />
@@ -140,7 +150,7 @@ function TasksTable() {
       <DataTable
         value={users}
         globalFilter={globalFilter}
-        emptyMessage="Nenhuma tarefa encontrada"
+        emptyMessage="Nenhum funcionário encontrado"
         selectionMode="single"
         selection={selectedUser}
         onSelectionChange={(e) => setSelectedUser(e.value as UserData | null)}
@@ -166,6 +176,7 @@ function TasksTable() {
           body={statusTemplate}
           sortable
         />
+        <Column field="role.name" header="Papel" body={roleTemplate} sortable />
       </DataTable>
     </div>
   );

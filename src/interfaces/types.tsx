@@ -65,7 +65,6 @@ export interface CustomersHeadCell {
   label: string;
   numeric: boolean;
 }
-
 export interface Task {
   contractDate: string;
   contractDocument: string | null;
@@ -81,6 +80,18 @@ export interface Task {
   taskStatus: string;
   updatedAt: string;
   updatedDeadline: string | null;
+  usertask: UserTask[];
+}
+
+export interface UserTask {
+  id: number;
+  assignmentDate: string;
+  is_active: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: number;
+  taskId: number;
 }
 
 export interface TasksHeadCell {

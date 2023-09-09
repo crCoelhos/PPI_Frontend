@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ApiService from "../../services/api";
-import { Task } from "../../interfaces/types";
+import { Task, UserData } from "../../interfaces/types";
 import styles from "./TasksTable.module.css";
 import TaksAddTaskModal from "../TaksAddTaskModal/TaksAddTaskModal";
 import format from "date-fns/format";
@@ -16,6 +16,7 @@ import { Tag } from "primereact/tag";
 import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
 
 function TasksTable() {
+  const [users, setUsers] = useState<UserData[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +39,7 @@ function TasksTable() {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
         setTasks(res);
         setIsLoading(false);
-        console.log("Tasks fetched:", res);
+        console.log("Tasks fetched:", res[0].usertask[0].userId);
       } catch (error) {
         console.error(error);
         setIsLoading(false);
@@ -46,6 +47,23 @@ function TasksTable() {
     };
 
     fetchTasks();
+  }, []);
+
+  useEffect(() => {
+    console.log("Fetching users...");
+    const fetchUsers = async () => {
+      try {
+        const userResponse = await ApiService.fetchData<UserData[]>(
+          "admin/users/"
+        );
+        setUsers(userResponse);
+        console.log("users fetched:", userResponse);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   async function handleDelete() {
@@ -141,6 +159,19 @@ function TasksTable() {
     }
   };
 
+  const mapUserIdsToNames = (userIds: number[]): string[] => {
+    return userIds.map((userId) => {
+      const user = users.find((user) => user.id === userId);
+      return user ? user.name : "Desconhecido";
+    });
+  };
+
+  const userAssigneesTemplate = (rowData: Task) => {
+    const userAssignees = rowData.usertask.map((userTask) => userTask.userId);
+    const userNames = mapUserIdsToNames(userAssignees);
+    return userNames.join(", ");
+  };
+
   return (
     <div>
       <Grid container>
@@ -219,6 +250,7 @@ function TasksTable() {
           body={statusTemplate}
           sortable
         />
+        <Column header="Designado" body={userAssigneesTemplate} sortable />
       </DataTable>
     </div>
   );

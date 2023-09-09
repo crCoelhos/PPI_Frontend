@@ -88,7 +88,8 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
             }
           );
 
-          setTask(taskResponse.data.task);
+          console.log("teste: ", taskResponse.data);
+          setTask(taskResponse.data);
 
           const customerResponse = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,
@@ -126,7 +127,8 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
     fetchUsers();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
@@ -241,26 +243,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                       }}
                     />
                   </LocalizationProvider>
-                  {/* <InputLabel id="domain-select-label">
-                    Dominio da atividade
-                  </InputLabel>
-                  <Select
-                    className={styles.SelectOptions}
-                    labelId="customer-select-label"
-                    id="taskDomain"
-                    value={selectedTaskDomain}
-                    label="Dominio"
-                    onChange={(e) => {
-                      setSelectedTaskDomain(e.target.value);
-                      setTaskDomain(e.target.value);
-                    }}
-                  >
-                    {expertises.map((expertise) => (
-                      <MenuItem key={expertise.id} value={Number(expertise.id)}>
-                        {expertise.name}
-                      </MenuItem>
-                    ))}
-                  </Select> */}
+                  
                 </Grid>
                 {/* /COLUNA1 */}
 
