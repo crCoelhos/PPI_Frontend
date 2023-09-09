@@ -20,7 +20,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import TaskController from "../../controllers/taskController";
 import axios from "axios";
-import { CustomerData, ExpertiseData, Task } from "../../interfaces/types";
+import {
+  CustomerData,
+  ExpertiseData,
+  Task,
+  UserData,
+} from "../../interfaces/types";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
@@ -38,10 +43,14 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
 }) => {
   const [customers, setCustomers] = React.useState<CustomerData[]>([]);
   const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
-  const [task, setTask] = React.useState<Task>();
   const [selectedTaskDomain, setSelectedTaskDomain] = React.useState("");
   const [selectedCustomer, setSelectedCustomer] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(true);
+  const [task, setTask] = React.useState<Task | undefined>(undefined);
+  const [users, setUsers] = React.useState<UserData[]>([]);
+  const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
+    task && task.usertask.length > 0 ? task.usertask[0].userId : ""
+  );
 
   const {
     name,
@@ -88,8 +97,22 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
             }
           );
 
-          console.log("teste: ", taskResponse.data);
+          console.log("leticia: ", taskResponse.data);
           setTask(taskResponse.data);
+
+          if (taskResponse.data.usertask.length > 0) {
+            setSelectedUserId(taskResponse.data.usertask[0].userId.toString());
+          }
+
+          const usersResponse = await axios.get(`${appURL}admin/users`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: tokenValue,
+              Access: accessValue,
+            },
+          });
+
+          setUsers(usersResponse.data);
 
           const customerResponse = await axios.get<CustomerData[]>(
             `${appURL}admin/customers/`,
@@ -243,7 +266,6 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                       }}
                     />
                   </LocalizationProvider>
-                  
                 </Grid>
                 {/* /COLUNA1 */}
 
@@ -289,6 +311,26 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                     <MenuItem value="CANCELED">CANCELED</MenuItem>
                     <MenuItem value="COMPLETED">COMPLETED</MenuItem>
                     <MenuItem value="OVERDUE">OVERDUE</MenuItem>
+                  </Select>
+
+                  <InputLabel id="taskStatus-select-label">
+                    Funcionário designado
+                  </InputLabel>
+                  <Select
+                    labelId="assignedUser-select-label"
+                    id="assignedUser"
+                    value={selectedUserId}
+                    onChange={(e) => {
+                      const userId = e.target.value;
+                      setSelectedUserId(userId);
+                    }}
+                  >
+                    <MenuItem value="">Selecione um usuário</MenuItem>
+                    {users.map((user) => (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
                 {/* /COLUNA2 */}
