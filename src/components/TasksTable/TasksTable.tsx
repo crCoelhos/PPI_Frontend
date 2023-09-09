@@ -39,7 +39,6 @@ function TasksTable() {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
         setTasks(res);
         setIsLoading(false);
-        console.log("Tasks fetched:", res[0].usertask[0].userId);
       } catch (error) {
         console.error(error);
         setIsLoading(false);
@@ -81,8 +80,16 @@ function TasksTable() {
     }
   }
 
-  const dateTemplate = (rowData: Task) => {
-    return format(new Date(rowData.contractDate), "dd/MM/yyyy");
+  const contractDateTemplate = (rowData: Task) => {
+    const contractDate = rowData.contractDate
+      ? new Date(rowData.contractDate)
+      : null;
+    return contractDate ? format(contractDate, "dd/MM/yyyy") : "";
+  };
+
+  const deadlineTemplate = (rowData: Task) => {
+    const deadline = rowData.deadline ? new Date(rowData.deadline) : null;
+    return deadline ? format(deadline, "dd/MM/yyyy") : "";
   };
 
   const statusTemplate = (rowData: Task) => {
@@ -167,9 +174,14 @@ function TasksTable() {
   };
 
   const userAssigneesTemplate = (rowData: Task) => {
-    const userAssignees = rowData.usertask.map((userTask) => userTask.userId);
-    const userNames = mapUserIdsToNames(userAssignees);
-    return userNames.join(", ");
+    const userTask = rowData.usertask;
+    if (userTask && userTask.length > 0) {
+      const userAssignees = userTask.map((userTask) => userTask.userId);
+      const userNames = mapUserIdsToNames(userAssignees);
+      return userNames.join(", ");
+    } else {
+      return "Nenhum usuário designado";
+    }
   };
 
   return (
@@ -216,17 +228,22 @@ function TasksTable() {
         onSelectionChange={(e) => setSelectedTask(e.value as Task | null)}
       >
         <Column field="name" header="Nome" sortable />
-        <Column field="description" header="Descrição" sortable />
+        <Column
+          field="description"
+          header="Descrição"
+          sortable
+          style={{ width: "175px" }}
+        />
         <Column
           field="contractDate"
           header="Data do contrato"
-          body={dateTemplate}
+          body={contractDateTemplate}
           sortable
         />
         <Column
           field="deadline"
           header="Prazo Final"
-          body={dateTemplate}
+          body={deadlineTemplate}
           sortable
         />
 
@@ -244,12 +261,12 @@ function TasksTable() {
           sortable
         />
 
-        <Column
+        {/* <Column
           field="isActive"
           header="Status"
           body={statusTemplate}
           sortable
-        />
+        /> */}
         <Column header="Designado" body={userAssigneesTemplate} sortable />
       </DataTable>
     </div>

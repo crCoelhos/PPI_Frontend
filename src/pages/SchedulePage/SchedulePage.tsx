@@ -9,9 +9,9 @@ interface SchedulePageProps {}
 const SchedulePage: FC<SchedulePageProps> = () => (
   <div className={styles.SchedulePageContent}>
     <PrimaryAppBar />
-    <TaksAddTaskModal />
     <div className={styles.SchedulePage}>
       <div className={styles.tableArea}>
+        <TaksAddTaskModal />
         <MainCalendar />
       </div>
     </div>

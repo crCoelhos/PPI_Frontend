@@ -48,9 +48,8 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   const [isLoading, setIsLoading] = React.useState(true);
   const [task, setTask] = React.useState<Task | undefined>(undefined);
   const [users, setUsers] = React.useState<UserData[]>([]);
-  // const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
-  //   task && task.usertask.length > 0 ? task.usertask[0].userId : ""
-  // );
+  const [newAssignment, setNewAssignment] = React.useState<boolean>(false);
+
   const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
     ""
   );
@@ -103,7 +102,6 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
             }
           );
 
-          console.log("leticia: ", taskResponse.data);
           setTask(taskResponse.data);
 
           if (taskResponse.data.usertask.length > 0) {
@@ -157,6 +155,11 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   }, []);
 
   const handleSubmit = async (e: any) => {
+    // e.preventDefault();
+
+    const assignmentDate = new Date();
+    console.log(newAssignment);
+
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
@@ -167,9 +170,31 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
       tokenValue = tokenObject.token;
 
       try {
-        if (selectedUserId !== previousSelectedUserId) {
+        if (task?.usertask?.length === 0) {
+          var newAssignmentBody = {
+            assignmentDate: assignmentDate.toISOString(),
+            userId: selectedUserId,
+            taskId: task?.id,
+            is_active: true,
+            status: "TODO",
+          };
+
+          await axios.post(`${appURL}admin/UserTask`, newAssignmentBody, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: tokenValue,
+              Access: accessValue,
+            },
+          });
+          console.log(
+            "Associação da tarefa com o usuário atualizada com sucesso!"
+          );
+        } else if (selectedUserId !== previousSelectedUserId) {
+          console.log("entramos aqui");
+          const userTaskId = task?.usertask?.[0]?.id;
+
           await axios.put(
-            `${appURL}admin/UserTask/${task?.id}`,
+            `${appURL}admin/UserTask/${userTaskId}`,
             { userId: selectedUserId },
             {
               headers: {
@@ -184,7 +209,6 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
           );
         }
 
-        // Resto do código de atualização da tarefa
         await axios.put(`${appURL}admin/task/${task?.id}`, task, {
           headers: {
             "Content-Type": "application/json",

@@ -12,9 +12,9 @@ const CustomersPage: FC<CustomersPageProps> = () => {
   return (
     <div className={styles.CustomersPageContent}>
       <PrimaryAppBar />
-      <CustomersAddCustomerModal />
       <div className={styles.CustomersPage}>
         <div className={styles.tableArea}>
+          <CustomersAddCustomerModal />
           <CustomersTable />
         </div>
       </div>

@@ -140,10 +140,10 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
                   onChange={handlePasswordChange}
                   required
                 />
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Lembrar"
-                />
+                /> */}
                 <Button
                   type="submit"
                   fullWidth
@@ -154,9 +154,9 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    {/* <Link href="#" variant="body2">
                       Recuperar senha
-                    </Link>
+                    </Link> */}
                   </Grid>
                   <Grid item></Grid>
                 </Grid>

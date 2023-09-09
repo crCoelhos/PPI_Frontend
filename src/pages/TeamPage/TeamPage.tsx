@@ -12,8 +12,8 @@ const TeamPage: FC<TeamPageProps> = () => {
   return (
     <div className={styles.TeamPageContent}>
       <PrimaryAppBar />
-      <TeamMembersAddMemberModal />
       <div className={styles.TeamPage}>
+        <TeamMembersAddMemberModal />
         <React.Suspense fallback={<div>Carregando...</div>}>
           <TeamMembersTable />
         </React.Suspense>

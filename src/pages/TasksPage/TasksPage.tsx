@@ -11,8 +11,6 @@ interface TasksPageProps {}
 const TasksPage: FC<TasksPageProps> = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  
-  
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -22,19 +20,14 @@ const TasksPage: FC<TasksPageProps> = () => {
     setIsDeleteModalOpen(false);
   };
 
-  
-
-
   return (
     <div className={styles.TasksPageContent}>
       <PrimaryAppBar />
-      <TaksAddTaskModal />
-     
       <div className={styles.TasksPage}>
+        <TaksAddTaskModal />
         <React.Suspense fallback={<div>Carregando...</div>}>
           <TasksTable />
         </React.Suspense>
-        <div className={styles.tableArea}></div>
       </div>
     </div>
   );

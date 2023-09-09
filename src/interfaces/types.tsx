@@ -80,7 +80,7 @@ export interface Task {
   taskStatus: string;
   updatedAt: string;
   updatedDeadline: string | null;
-  usertask: UserTask[];
+  usertask: UserTask[] | null;
 }
 
 export interface UserTask {

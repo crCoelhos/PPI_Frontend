@@ -8,7 +8,7 @@ import MainCalendar from "../../components/MainCalendar/MainCalendar";
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = () => {
-  const { userData, token } = useSessionStorageUserData();
+  const { userData } = useSessionStorageUserData();
 
   return (
     <div className={styles.HomePage}>
@@ -16,9 +16,7 @@ const HomePage: React.FC<HomePageProps> = () => {
       <div>
         {userData ? (
           <div>
-            <h1>testando</h1>
-            <h2>Dados do Usuário: {token}</h2>
-            <p>Nome: {userData.email}</p>
+            <p>Autenticado como: {userData.name}</p>
           </div>
         ) : (
           <p>Nenhum dado de usuário encontrado.</p>

@@ -38,9 +38,8 @@ function App() {
     </AuthProvider>
   );
 }
-
-// TODO replicar o modal de edição do tasks para todos os outros
-// TODO ajustar o botão de edit ^
+// TODO ajustar o botão de edit task, AJUSTAR A DATA NÃO TA FUNCIONANDO
+// TODO ajustar o user asignment pra caso não haja nenhum asignment
 
 
 export default App;
