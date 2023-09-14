@@ -176,7 +176,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
             userId: selectedUserId,
             taskId: task?.id,
             is_active: true,
-            status: "TODO",
+            status: "TO_ESTIMATE",
           };
 
           await axios.post(`${appURL}admin/UserTask`, newAssignmentBody, {
@@ -311,6 +311,25 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                       }}
                     />
                   </LocalizationProvider>
+
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    type="number"
+                    id="estimateValue"
+                    label="Orçamento"
+                    name="estimateValue"
+                    autoComplete="taskTitle"
+                    value={task?.estimateValue ?? ""}
+                    onChange={(e) => {
+                      setTask((prevTask: any) => ({
+                        ...prevTask,
+                        estimateValue: e.target.value,
+                      }));
+                    }}
+                    autoFocus
+                  />
                 </Grid>
                 {/* /COLUNA1 */}
 
@@ -349,13 +368,13 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                       }));
                     }}
                   >
-                    <MenuItem value="TODO">TODO</MenuItem>
-                    <MenuItem value="WAITING">WAITING</MenuItem>
-                    <MenuItem value="INPROGRESS">IN PROGRESS</MenuItem>
-                    <MenuItem value="PAUSED">PAUSED</MenuItem>
-                    <MenuItem value="CANCELED">CANCELED</MenuItem>
-                    <MenuItem value="COMPLETED">COMPLETED</MenuItem>
-                    <MenuItem value="OVERDUE">OVERDUE</MenuItem>
+                    <MenuItem value="TO_ESTIMATE">ORÇAMENTAR</MenuItem>
+                    <MenuItem value="WAITING">AGUARDANDO</MenuItem>
+                    <MenuItem value="INPROGRESS">EM PROGRESSO</MenuItem>
+                    <MenuItem value="PAUSED">PAUSADA</MenuItem>
+                    <MenuItem value="CANCELED">CANCELADA</MenuItem>
+                    <MenuItem value="COMPLETED">CONCLUIDA</MenuItem>
+                    <MenuItem value="OVERDUE">ATRASADA</MenuItem>
                   </Select>
 
                   <InputLabel id="taskStatus-select-label">

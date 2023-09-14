@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styles from "./TeamEditTeamModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import TeamEditTeamForm from "../TeamEditTeamForm/TeamEditTeamModal";
 
 interface TeamEditTeamModalProps {
@@ -46,9 +46,7 @@ const TeamEditTeamModal: FC<TeamEditTeamModalProps> = ({
           variant="contained"
           color="secondary"
           startIcon={<EditIcon />}
-        >
-          Editar seleção
-        </Button>
+        ></Button>
         <Modal
           open={open}
           onClose={handleClose}

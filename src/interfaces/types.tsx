@@ -77,6 +77,7 @@ export interface Task {
   name: string;
   startDate: string;
   taskDomain: string;
+  estimateValue: any;
   taskStatus: string;
   updatedAt: string;
   updatedDeadline: string | null;

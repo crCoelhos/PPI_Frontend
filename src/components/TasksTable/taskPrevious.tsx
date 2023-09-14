@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import ApiService from "../../services/api";
+import { Task, UserData } from "../../interfaces/types";
 import styles from "./TasksTable.module.css";
+import TaksAddTaskModal from "../TaksAddTaskModal/TaksAddTaskModal";
 import format from "date-fns/format";
 
-import {
-  Grid,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  Box,
-} from "@mui/material";
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
+import { Column } from "primereact/column";
+import Grid from "@mui/material/Grid";
 import ClearIcon from "@mui/icons-material/Clear";
+import Button from "@mui/material/Button";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
-import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
-import { UserData, Task } from "../../interfaces/types";
-
-import ApiService from "../../services/api";
 import { Tag } from "primereact/tag";
+import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
 
 function TasksTable() {
   const [users, setUsers] = useState<UserData[]>([]);
@@ -29,12 +21,16 @@ function TasksTable() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [orderBy, setOrderBy] = useState<keyof Task>("name");
-
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null); // Use selectedTask para armazenar a tarefa selecionada
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     console.log("Fetching tasks...");
@@ -42,7 +38,6 @@ function TasksTable() {
       try {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
         setTasks(res);
-        setFilteredTasks(res);
         setIsLoading(false);
         console.log("tasks fetched:", res);
       } catch (error) {
@@ -62,6 +57,7 @@ function TasksTable() {
           "admin/users/"
         );
         setUsers(userResponse);
+        // console.log("users fetched:", userResponse);
       } catch (error) {
         console.error(error);
       }
@@ -69,13 +65,6 @@ function TasksTable() {
 
     fetchUsers();
   }, []);
-
-  useEffect(() => {
-    const filtered = tasks.filter((task) =>
-      task.name.toLowerCase().includes(globalFilter.toLowerCase())
-    );
-    setFilteredTasks(filtered);
-  }, [globalFilter, tasks]);
 
   async function handleDelete() {
     if (selectedTask?.id) {
@@ -160,9 +149,7 @@ function TasksTable() {
     return <Tag severity={statusColor} value={statusText} rounded />;
   };
 
-  const expertiseTemplate = (rowData: Task) => {
-    const taskDomain = parseInt(rowData.taskDomain); // Converta para número
-
+  const expertiseTemplate = (rowData: { taskDomain: number }) => {
     const expertiseMap: { [key: number]: { name: string; color: string } } = {
       1: { name: "Design", color: "#FF6600" },
       2: { name: "Filmagem", color: "#00CC66" },
@@ -173,8 +160,8 @@ function TasksTable() {
       7: { name: "Consultoria", color: "#996633" },
     };
 
-    if (!isNaN(taskDomain) && taskDomain in expertiseMap) {
-      const expertiseName = expertiseMap[taskDomain];
+    if (rowData.taskDomain in expertiseMap) {
+      const expertiseName = expertiseMap[rowData.taskDomain];
       return (
         <Tag
           severity="success"
@@ -206,97 +193,102 @@ function TasksTable() {
     }
   };
 
-  const actionsTemplate = (rowData: Task) => {
-    return (
-      <>
-        <GenericDeleteModal
-          open={isDeleteModalOpen}
-          onClose={closeDeleteModal}
-          onDelete={handleDelete}
-          isOpen={true}
-          itemClass="task"
-          itemId={rowData?.id}
-        />
-
-        <TasksEditTaskModal
-          open={isEditModalOpen}
-          onClose={closeEditModal}
-          isOpen={true}
-          itemId={rowData?.id}
-        />
-      </>
-    );
-  };
-
-  const openDeleteModal = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-  };
-
-  const openEditModal = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-  };
-
-  const handleDeleteClick = (task: Task) => {
-    setSelectedTask(task);
-    openDeleteModal();
-  };
-
-  const handleEditClick = (task: Task) => {
-    setSelectedTask(task);
-    openEditModal();
-  };
-
   return (
-    <TableContainer>
-      <TextField
-        label="Buscar tarefas"
-        value={globalFilter}
-        onChange={(e) => {
-          setGlobalFilter(e.target.value);
-          console.log(e.target.value); // Adicione este console.log para verificar o valor
-        }}
-      />
+    <div>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <GenericDeleteModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            onDelete={handleDelete}
+            isOpen={true}
+            itemClass="task"
+            itemId={selectedTask?.id}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <TasksEditTaskModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            isOpen={true}
+            itemId={selectedTask?.id}
+          />
+        </Grid>
+      </Grid>
 
-      <Table className={styles.TasksTable}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Nome</TableCell>
-            <TableCell>Descrição</TableCell>
-            <TableCell>Data do contrato</TableCell>
-            <TableCell>Prazo Final</TableCell>
-            <TableCell>Domínio da atividade</TableCell>
-            <TableCell>Orçamento</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Ação</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {tasks.map((task) => (
-            <TableRow key={task.id}>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              <TableCell>{contractDateTemplate(task)}</TableCell>
-              <TableCell>{deadlineTemplate(task)}</TableCell>
-              <TableCell>{expertiseTemplate(task)}</TableCell>
-              <TableCell>{estimativeTemplate(task)}</TableCell>
-              <TableCell>{taskStatusTemplate(task)}</TableCell>
-              <TableCell>{actionsTemplate(task)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <div className="p-inputgroup">
+        <span className="p-inputgroup-addon">
+          <i className="pi pi-search" />
+        </span>
+        <InputText
+          type="text"
+          placeholder="Buscar tarefas"
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+        />
+      </div>
+
+      <DataTable
+        value={tasks}
+        globalFilter={globalFilter}
+        emptyMessage="Nenhuma tarefa encontrada"
+        selectionMode="single"
+        selection={selectedTask}
+        scrollable
+        scrollHeight="flex"
+        onSelectionChange={(e) => setSelectedTask(e.value as Task | null)}
+      >
+        <Column field="name" header="Nome" sortable />
+        <Column
+          field="description"
+          header="Descrição"
+          sortable
+          style={{ width: "175px" }}
+        />
+        <Column
+          field="contractDate"
+          header="Data do contrato"
+          body={contractDateTemplate}
+          sortable
+        />
+        <Column
+          field="deadline"
+          header="Prazo Final"
+          body={deadlineTemplate}
+          sortable
+        />
+
+        <Column
+          field="taskDomain"
+          header="Domínio da atividade"
+          body={expertiseTemplate}
+          sortable
+        />
+
+        <Column
+          field="estimateValue"
+          header="Orçamento"
+          body={estimativeTemplate}
+          sortable
+        />
+
+        <Column
+          field="taskStatus"
+          header="taskStatus"
+          body={taskStatusTemplate}
+          sortable
+        />
+
+        {/* <Column
+          field="isActive"
+          header="Status"
+          body={statusTemplate}
+          sortable
+        /> */}
+        <Column header="Designado" body={userAssigneesTemplate} sortable />
+      </DataTable>
+    </div>
   );
 }
 
 export default TasksTable;
-
-// TODO arrumar o filtro, search não funcionando

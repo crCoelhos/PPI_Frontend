@@ -40,6 +40,6 @@ function App() {
 }
 // TODO ajustar o botão de edit task, AJUSTAR A DATA NÃO TA FUNCIONANDO
 // TODO ajustar o user asignment pra caso não haja nenhum asignment
-
+// TODO considerar colocar divs com link para as atividades
 
 export default App;

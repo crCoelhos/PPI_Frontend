@@ -1,4 +1,3 @@
-// import styles from './CustomersTable.module.css';
 import React, { FC, useEffect, useState } from "react";
 import {
   Table,
@@ -10,6 +9,7 @@ import {
   Checkbox,
   TableSortLabel,
   Box,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import styles from "./CustomersTable.module.css";
@@ -23,9 +23,10 @@ interface CustomersTableProps {}
 const CustomersTable: FC<CustomersTableProps> = () => {
   const [orderBy, setOrderBy] = useState<keyof CustomerData>("businessName");
   const [order, setOrder] = React.useState<Order>("asc");
-  const [selected, setSelected] = useState<number[]>([]);
+  // const [selected, setSelected] = useState<number[]>([]);
 
   const [customers, setCustomers] = useState<CustomerData[]>([]);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const headCells: readonly CustomersHeadCell[] = [
     {
@@ -124,115 +125,108 @@ const CustomersTable: FC<CustomersTableProps> = () => {
     return 0;
   };
 
-  const sortedCustomers = [...customers].sort(comparator);
+  // const sortedCustomers = [...customers].sort(comparator);
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const selectedIds = sortedCustomers.map((customer) => customer.id);
-      setSelected(selectedIds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleCheckboxClick = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+  const sortedCustomers = [...customers]
+    .filter((customer) => {
+      const searchTerm = searchValue.toLowerCase();
+      return (
+        customer.businessName.toLowerCase().includes(searchTerm) ||
+        customer.cnpj.toLowerCase().includes(searchTerm) ||
+        customer.contactName.toLowerCase().includes(searchTerm) ||
+        customer.size.toString().toLowerCase().includes(searchTerm) ||
+        (customer.isActive ? "ativo" : "inativo")
+          .toLowerCase()
+          .includes(searchTerm)
       );
-    }
+    })
+    .sort(comparator);
 
-    setSelected(newSelected);
-  };
+  // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.checked) {
+  //     const selectedIds = sortedCustomers.map((customer) => customer.id);
+  //     setSelected(selectedIds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  // const handleCheckboxClick = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   id: number
+  // ) => {
+  //   const selectedIndex = selected.indexOf(id);
+  //   let newSelected: number[] = [];
+
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, id);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1)
+  //     );
+  //   }
+
+  //   setSelected(newSelected);
+  // };
+
+  // const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   return (
     <TableContainer>
-      {customers.length > 0 ? (
-        <Table className={styles.CustomersTable}>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 &&
-                    selected.length < sortedCustomers.length
-                  }
-                  checked={
-                    sortedCustomers.length > 0 &&
-                    selected.length === sortedCustomers.length
-                  }
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              {headCells.map((headCell) => (
-                <TableCell
-                  key={headCell.id}
-                  align={headCell.numeric ? "right" : "left"}
-                  padding={headCell.disablePadding ? "none" : "normal"}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                >
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={createSortHandler(headCell.id)}
-                  >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <Box component="span" sx={visuallyHidden}></Box>
-                    ) : null}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedCustomers.map((customer) => (
-              <TableRow
-                key={customer.id}
-                hover
-                role="checkbox"
-                tabIndex={-1}
-                selected={isSelected(customer.id)}
+      <TextField
+        label="Pesquisar"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+      />
+      <Table className={styles.CustomersTable}>
+        <TableHead>
+          <TableRow>
+            {headCells.map((headCell) => (
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? "right" : "left"}
+                padding={headCell.disablePadding ? "none" : "normal"}
+                sortDirection={orderBy === headCell.id ? order : false}
               >
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={isSelected(customer.id)}
-                    onChange={(event) =>
-                      handleCheckboxClick(event, customer.id)
-                    }
-                  />
-                </TableCell>
-                <TableCell>{customer.businessName}</TableCell>
-                <TableCell>{customer.cnpj}</TableCell>
-                <TableCell>{customer.contactName}</TableCell>
-                <TableCell align="right">{customer.size}</TableCell>
-                <TableCell>
-                  {!customer.isActive ? "Inativo" : "Ativo"}
-                </TableCell>
-              </TableRow>
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}></Box>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
             ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <p>Loading...</p>
-      )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {sortedCustomers.map((customer) => (
+            <TableRow
+              key={customer.id}
+              hover
+            >
+              <TableCell>{customer.businessName}</TableCell>
+              <TableCell>{customer.cnpj}</TableCell>
+              <TableCell>{customer.contactName}</TableCell>
+              <TableCell align="right">{customer.size}</TableCell>
+              <TableCell>
+                {!customer.isActive ? "Inativo" : "Ativo"}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </TableContainer>
   );
 };
+
 
 export default CustomersTable;

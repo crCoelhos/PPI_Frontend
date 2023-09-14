@@ -1,43 +1,52 @@
 import React, { useEffect, useState } from "react";
-import ApiService from "../../services/api";
-import { Task, User, UserData } from "../../interfaces/types";
-import styles from "./TasksTable.module.css";
-import TaksAddTaskModal from "../TaksAddTaskModal/TaksAddTaskModal";
-import format from "date-fns/format";
+import { UserData } from "../../interfaces/types";
+// import TaksAddUserModal from "../TaksAddUserModal/TaksAddUserModal";
 
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
+import TeamEditTeamModal from "../TeamEditTeamModal/TeamEditTeamModal";
+import axios from "axios";
+import styles from "./TeamMembersTable.module.css";
+import format from "date-fns/format";
+
+import {
+  Grid,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Box,
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
+// import UsersEditUserModal from "../UsersEditUserModal/UsersEditUserModal";
+
+import ApiService from "../../services/api";
 import { Tag } from "primereact/tag";
 
-import Grid from "@mui/material/Grid";
-import ClearIcon from "@mui/icons-material/Clear";
-import Button from "@mui/material/Button";
-import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
-import TeamEditTaskModal from "../TeamEditTeamModal/TeamEditTeamModal";
-
-function TasksTable() {
+function UsersTable() {
   const [users, setUsers] = useState<UserData[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [orderBy, setOrderBy] = useState<keyof UserData>("name");
-  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const openDeleteModal = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-  };
+  const [selectedUser, setselectedUser] = useState<UserData | null>(null); // Use selectedUser para armazenar a tarefa selecionada
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     console.log("Fetching users...");
-    const fetchTasks = async () => {
+    const fetchUsers = async () => {
       try {
         const res = await ApiService.fetchData<UserData[]>("admin/users/");
-        setUsers(res);
+        // setUsers(res);
+        console.log(res);
         setIsLoading(false);
         console.log("users fetched:", res);
       } catch (error) {
@@ -46,26 +55,48 @@ function TasksTable() {
       }
     };
 
-    fetchTasks();
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    console.log("Fetching users...");
+    const fetchUsers = async () => {
+      try {
+        const userResponse = await ApiService.fetchData<UserData[]>(
+          "admin/users/"
+        );
+        setUsers(userResponse);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   async function handleDelete() {
     if (selectedUser?.id) {
       try {
         const updatedUsers = users.filter(
-          (users) => users.id !== selectedUser.id
+          (user) => user.id !== selectedUser.id
         );
         setUsers(updatedUsers);
 
         closeDeleteModal();
       } catch (error) {
-        console.error("Erro ao excluir usuário:", error);
+        console.error("Erro ao excluir a tarefa:", error);
       }
     }
   }
 
+  const birthDateTemplate = (rowData: UserData) => {
+    const birthdate = rowData.birthdate ? new Date(rowData.birthdate) : null;
+    return birthdate ? format(birthdate, "dd/MM/yyyy") : "";
+  };
+
   const hireDateTemplate = (rowData: UserData) => {
-    return format(new Date(rowData.hireDate), "dd/MM/yyyy");
+    const hireDate = rowData.hireDate ? new Date(rowData.hireDate) : null;
+    return hireDate ? format(hireDate, "dd/MM/yyyy") : "";
   };
 
   const statusTemplate = (rowData: UserData) => {
@@ -76,17 +107,9 @@ function TasksTable() {
     );
   };
 
-  const roleTemplate = (rowData: UserData) => {
-    if (rowData.role.name === "ADMIN") {
-      return <Tag severity="danger" value={rowData.role.name} rounded />;
-    } else if (rowData.role.name === "TESTE") {
-      return <Tag severity="success" value={rowData.role.name} rounded />;
-    } else if (rowData.role.name === "FUNCIONARIO") {
-      return <Tag severity="success" value={rowData.role.name} rounded />;
-    }
-  };
+  const expertiseTemplate = (rowData: UserData) => {
+    const userDomain = rowData.expertiseId;
 
-  const expertiseTemplate = (rowData: { expertiseId: number }) => {
     const expertiseMap: { [key: number]: { name: string; color: string } } = {
       1: { name: "Design", color: "#FF6600" },
       2: { name: "Filmagem", color: "#00CC66" },
@@ -97,8 +120,8 @@ function TasksTable() {
       7: { name: "Consultoria", color: "#996633" },
     };
 
-    if (rowData.expertiseId in expertiseMap) {
-      const expertiseName = expertiseMap[rowData.expertiseId];
+    if (!isNaN(userDomain) && userDomain in expertiseMap) {
+      const expertiseName = expertiseMap[userDomain];
       return (
         <Tag
           severity="success"
@@ -112,75 +135,97 @@ function TasksTable() {
     }
   };
 
+  const mapUserIdsToNames = (userIds: number[]): string[] => {
+    return userIds.map((userId) => {
+      const user = users.find((user) => user.id === userId);
+      return user ? user.name : "Desconhecido";
+    });
+  };
+
+  const actionsTemplate = (rowData: UserData) => {
+    return (
+      <>
+        <GenericDeleteModal
+          open={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onDelete={handleDelete}
+          isOpen={true}
+          itemClass="user"
+          itemId={rowData?.id}
+        />
+
+        <TeamEditTeamModal
+          open={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          isOpen={true}
+          itemId={rowData?.id}
+        />
+      </>
+    );
+  };
+
+  // aaaaaaaaaaaaaaaaaaaaa
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteClick = (user: UserData) => {
+    setselectedUser(user);
+    openDeleteModal();
+  };
+
+  const handleEditClick = (user: UserData) => {
+    setselectedUser(user);
+    openEditModal();
+  };
+
   return (
-    <div>
-      <Grid container spacing={1}>
-        <Grid item xs={12} md={6} sm={6}>
-          <GenericDeleteModal
-            open={isDeleteModalOpen}
-            onClose={closeDeleteModal}
-            onDelete={handleDelete}
-            isOpen={true}
-            itemClass="user"
-            itemId={selectedUser?.id}
-          />
-        </Grid>
-        <Grid item xs={12} md={6} sm={6}>
-          <TeamEditTaskModal
-            open={isDeleteModalOpen}
-            onClose={closeDeleteModal}
-            isOpen={true}
-            itemId={selectedUser?.id}
-          />
-        </Grid>
-      </Grid>
-
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">
-          <i className="pi pi-search" />
-        </span>
-        <InputText
-          type="text"
-          placeholder="Buscar"
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-        />
-      </div>
-
-      <DataTable
-        value={users}
-        globalFilter={globalFilter}
-        emptyMessage="Nenhum funcionário encontrado"
-        selectionMode="single"
-        selection={selectedUser}
-        onSelectionChange={(e) => setSelectedUser(e.value as UserData | null)}
-      >
-        <Column field="name" header="Nome" sortable />
-        <Column field="contact" header="Contato" sortable />
-        <Column field="email" header="Email" sortable />
-        <Column
-          field="hireDate"
-          header="Data de contratação"
-          body={hireDateTemplate}
-          sortable
-        />
-        <Column
-          field="taskDomain"
-          header="Domínio da atividade"
-          body={expertiseTemplate}
-          sortable
-        />
-        <Column
-          field="isActive"
-          header="Status"
-          body={statusTemplate}
-          sortable
-        />
-        <Column field="role.name" header="Papel" body={roleTemplate} sortable />
-      </DataTable>
-    </div>
+    <TableContainer>
+      <TextField
+        label="Buscar funcionário"
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+      />
+      <Table className={styles.UsersTable}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Nome</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Nascimento</TableCell>
+            <TableCell>Data do contratação</TableCell>
+            <TableCell>Domínio <del></del> atividade</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Ação</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{birthDateTemplate(user)}</TableCell>
+              <TableCell>{hireDateTemplate(user)}</TableCell>
+              <TableCell>{expertiseTemplate(user)}</TableCell>
+              <TableCell>{statusTemplate(user)}</TableCell>
+              <TableCell>{actionsTemplate(user)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
-export default TasksTable;
-// NOME EMAIL CONTATO EXPERTISE STATUS
+export default UsersTable;

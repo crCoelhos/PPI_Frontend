@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import styles from "./TasksEditTaskModal.module.css";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import TaksAddTaskForm from "../TaksAddTaskForm/TaksAddTaskForm";
-import EditIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import TasksEditTaskForm from "../TasksEditTaskForm/TasksEditTaskForm";
 
 interface TasksEditTaskModalProps {
@@ -48,7 +48,7 @@ const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
           color="secondary"
           startIcon={<EditIcon />}
         >
-          Editar seleção
+          {/* Editar */}
         </Button>
         <Modal
           open={open}

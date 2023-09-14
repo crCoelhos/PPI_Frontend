@@ -39,7 +39,7 @@ interface SigninBoxProps {}
 
 const SigninBox: React.FC<SigninBoxProps> = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       login: data.get("login"),

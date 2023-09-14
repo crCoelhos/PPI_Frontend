@@ -13,7 +13,9 @@ const TaskController = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [customerId, setCustomerId] = useState<number | string>(0);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    // e.preventDefault();
+    
     const taskData = {
       name: name,
       description: description,
