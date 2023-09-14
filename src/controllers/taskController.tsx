@@ -14,7 +14,7 @@ const TaskController = () => {
   const [customerId, setCustomerId] = useState<number | string>(0);
 
   const handleSubmit = async (e: any) => {
-    // e.preventDefault();
+    e.preventDefault();
     
     const taskData = {
       name: name,

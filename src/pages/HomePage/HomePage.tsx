@@ -3,7 +3,7 @@ import styles from "./HomePage.module.css";
 import PermanentLeftDrawer from "../../components/PermanentLeftDrawer/PermanentLeftDrawer";
 import useSessionStorageUserData from "../../hooks/useSessionStorageUserData"; // Importe o hook
 import PrimaryAppBar from "../../components/PrimaryAppBar/PrimaryAppBar";
-import MainCalendar from "../../components/MainCalendar/MainCalendar";
+import CurrentMetricTable from "../../components/CurrentMetricTable/CurrentMetricTable";
 
 interface HomePageProps {}
 
@@ -17,6 +17,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         {userData ? (
           <div>
             <p>Autenticado como: {userData.name}</p>
+            <CurrentMetricTable />
           </div>
         ) : (
           <p>Nenhum dado de usuário encontrado.</p>

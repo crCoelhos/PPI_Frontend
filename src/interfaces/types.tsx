@@ -101,3 +101,11 @@ export interface TasksHeadCell {
   label: string;
   numeric: boolean;
 }
+
+export interface MetricData {
+  canceledTasksCount: number;
+  completedTasksCount: number;
+  doingTasksCount: number;
+  overdueTasksCount: number;
+  pausedTasksCount: number;
+}

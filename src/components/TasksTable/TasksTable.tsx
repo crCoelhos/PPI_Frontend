@@ -132,15 +132,21 @@ function TasksTable() {
 
     switch (rowData.taskStatus) {
       case "TO_ESTIMATE":
-        statusColor = "success";
+        statusColor = "info";
         statusText = "ORÇAMENTAR";
         break;
       case "WAITING":
+        statusColor = "warning";
+        statusText = "AGUARDANDO";
+        break;
       case "PAUSED":
         statusColor = "warning";
         statusText = "PAUSADA";
         break;
       case "CANCELED":
+        statusColor = "danger";
+        statusText = "CANCELADA";
+        break;
       case "OVERDUE":
         statusColor = "danger";
         statusText = "ATRASADA";

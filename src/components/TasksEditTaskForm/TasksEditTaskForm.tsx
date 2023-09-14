@@ -155,7 +155,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   }, []);
 
   const handleSubmit = async (e: any) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     const assignmentDate = new Date();
     console.log(newAssignment);
