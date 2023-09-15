@@ -19,6 +19,7 @@ const MainCalendar: FC<MainCalendarProps> = () => {
     const fetchTasks = async () => {
       try {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
+        console.log("teste", res);
 
         const formattedTasks = res.map((task) => ({
           start: moment(task.startDate).toDate(),
@@ -45,13 +46,13 @@ const MainCalendar: FC<MainCalendarProps> = () => {
   const eventPropGetter = (event: any) => {
     // Mapeamento de cores para taskDomains
     const domainColors: Record<number, string> = {
-      1: "#FF6600", 
-      2: "#00CC66", 
-      3: "#9900CC", 
+      1: "#FF6600",
+      2: "#00CC66",
+      3: "#9900CC",
       4: "#FF3399",
       5: "#3366FF",
       6: "#FF9933",
-      7: "#996633"
+      7: "#996633",
     };
 
     const backgroundColor = domainColors[event.domain] || "gray"; // Cor padrão
@@ -62,7 +63,6 @@ const MainCalendar: FC<MainCalendarProps> = () => {
       },
     };
   };
-
 
   return (
     <div className="MainCalendar">

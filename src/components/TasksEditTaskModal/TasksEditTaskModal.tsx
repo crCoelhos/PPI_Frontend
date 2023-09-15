@@ -22,7 +22,8 @@ const style = {
 };
 
 const buttonStyle = {
-  p: 2,
+  p: 1,
+  width: "112px"
 };
 
 const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
@@ -48,7 +49,7 @@ const TasksEditTaskModal: FC<TasksEditTaskModalProps> = ({
           color="secondary"
           startIcon={<EditIcon />}
         >
-          {/* Editar */}
+          Editar
         </Button>
         <Modal
           open={open}

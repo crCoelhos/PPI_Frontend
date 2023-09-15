@@ -15,6 +15,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import PreviewIcon from "@mui/icons-material/Preview";
 import ClearIcon from "@mui/icons-material/Clear";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
@@ -22,6 +23,7 @@ import { UserData, Task } from "../../interfaces/types";
 
 import ApiService from "../../services/api";
 import { Tag } from "primereact/tag";
+import { useNavigate } from "react-router-dom";
 
 function TasksTable() {
   const [users, setUsers] = useState<UserData[]>([]);
@@ -35,6 +37,7 @@ function TasksTable() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Fetching tasks...");
@@ -116,7 +119,7 @@ function TasksTable() {
     if (rowData.estimateValue && rowData.estimateValue > 0) {
       return <Tag value={`R$ ${rowData.estimateValue}`} rounded />;
     } else {
-      return <Tag severity="danger" value="Aguardando" rounded />;
+      return <Tag severity="warning" value="AGUARDANDO" rounded />;
     }
   };
 
@@ -212,24 +215,46 @@ function TasksTable() {
     }
   };
 
+  const buttonStyle = {
+    p: 1,
+    width: "112px",
+  };
+
+  const handleViewTaskClick = (taskId: number) => {
+    navigate(`/tasks/${taskId}`);
+    console.log(taskId);
+  };
+
   const actionsTemplate = (rowData: Task) => {
     return (
       <>
-        <GenericDeleteModal
-          open={isDeleteModalOpen}
-          onClose={closeDeleteModal}
-          onDelete={handleDelete}
-          isOpen={true}
-          itemClass="task"
-          itemId={rowData?.id}
-        />
+        <div>
+          <GenericDeleteModal
+            open={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            onDelete={handleDelete}
+            isOpen={true}
+            itemClass="task"
+            itemId={rowData?.id}
+          />
 
-        <TasksEditTaskModal
-          open={isEditModalOpen}
-          onClose={closeEditModal}
-          isOpen={true}
-          itemId={rowData?.id}
-        />
+          <TasksEditTaskModal
+            open={isEditModalOpen}
+            onClose={closeEditModal}
+            isOpen={true}
+            itemId={rowData?.id}
+          />
+
+          <Button
+            onClick={() => handleViewTaskClick(rowData.id)} // Passar o ID diretamente
+            variant="contained"
+            color="inherit"
+            startIcon={<PreviewIcon />}
+            sx={buttonStyle}
+          >
+            Ver
+          </Button>
+        </div>
       </>
     );
   };
@@ -282,6 +307,7 @@ function TasksTable() {
             <TableCell>Orçamento</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Ação</TableCell>
+            <TableCell>Designado</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -295,6 +321,7 @@ function TasksTable() {
               <TableCell>{estimativeTemplate(task)}</TableCell>
               <TableCell>{taskStatusTemplate(task)}</TableCell>
               <TableCell>{actionsTemplate(task)}</TableCell>
+              <TableCell>{userAssigneesTemplate(task)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -304,5 +331,3 @@ function TasksTable() {
 }
 
 export default TasksTable;
-
-// TODO arrumar o filtro, search não funcionando

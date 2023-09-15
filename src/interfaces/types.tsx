@@ -72,12 +72,12 @@ export interface Task {
   customerId: number;
   deadline: string;
   description: string;
+  estimateValue: any;
   id: number;
   isActive: boolean;
   name: string;
   startDate: string;
   taskDomain: string;
-  estimateValue: any;
   taskStatus: string;
   updatedAt: string;
   updatedDeadline: string | null;

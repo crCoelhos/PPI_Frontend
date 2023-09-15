@@ -8,3 +8,7 @@
 
   margin-left: 23vw;
 }
+.ActionButtonsContainer {
+  display: flex;
+  flex-direction: row;
+}

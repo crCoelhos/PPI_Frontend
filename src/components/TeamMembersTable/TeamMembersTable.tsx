@@ -45,7 +45,6 @@ function UsersTable() {
     const fetchUsers = async () => {
       try {
         const res = await ApiService.fetchData<UserData[]>("admin/users/");
-        // setUsers(res);
         console.log(res);
         setIsLoading(false);
         console.log("users fetched:", res);

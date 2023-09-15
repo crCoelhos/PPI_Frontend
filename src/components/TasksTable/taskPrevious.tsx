@@ -57,7 +57,6 @@ function TasksTable() {
           "admin/users/"
         );
         setUsers(userResponse);
-        // console.log("users fetched:", userResponse);
       } catch (error) {
         console.error(error);
       }

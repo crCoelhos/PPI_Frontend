@@ -34,7 +34,8 @@
     p: 2,
   };
   const buttonStyle = {
-    p: 2,
+    p: 1,
+    width: "112px"
   };
 
   const GenericDeleteModal: React.FC<GenericDeleteModalProps> = ({
@@ -84,6 +85,7 @@
             color="error"
             startIcon={<DeleteIcon />}
           >
+            Excluir
           </Button>
 
           <Modal

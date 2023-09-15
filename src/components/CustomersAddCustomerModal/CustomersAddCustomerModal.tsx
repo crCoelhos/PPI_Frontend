@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./CustomersAddCustomerModal.module.css";
-import { Button, Modal, Box, Typography } from "@mui/material";
+import { Button, Modal, Box, Typography, Fab } from "@mui/material";
 import CustomersAddCustomerForm from "../CustomersAddCustomerForm/CustomersAddCustomerForm";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -28,20 +28,28 @@ const CustomersAddCustomerModal: FC<CustomersAddCustomerModalProps> = () => {
   const handleClose = () => setOpen(false);
 
   const handleCancel = () => {
-    handleClose(); 
+    handleClose();
   };
 
   return (
     <div className={styles.CustomersAddCustomerModal}>
       <div>
-        <Button
+        {/* <Button
           onClick={handleOpen}
           sx={buttonStyle}
           variant="contained"
           startIcon={<AddIcon />}
         >
           Novo cliente
-        </Button>
+        </Button> */}
+        <Fab
+          color="primary"
+          onClick={handleOpen}
+          sx={buttonStyle}
+          // variant="contained"
+        >
+          <AddIcon />
+        </Fab>
         <Modal
           open={open}
           onClose={handleClose}

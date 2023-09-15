@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./TaksAddTaskModal.module.css";
-import { Button, Modal, Box, Typography } from "@mui/material";
+import { Button, Modal, Box, Typography, Fab } from "@mui/material";
 import TaksAddTaskForm from "../TaksAddTaskForm/TaksAddTaskForm";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -34,14 +34,22 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
   return (
     <div className={styles.TeamMembersAddMemberModal}>
       <div>
-        <Button
+        {/* <Button
           onClick={handleOpen}
           sx={buttonStyle}
           variant="contained"
           startIcon={<AddIcon />}
         >
           Nova demanda
-        </Button>
+        </Button> */}
+        <Fab
+          color="primary"
+          onClick={handleOpen}
+          sx={buttonStyle}
+          // variant="contained"
+        >
+          <AddIcon />
+        </Fab>
         <Modal
           open={open}
           onClose={handleClose}

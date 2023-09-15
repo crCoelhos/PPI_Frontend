@@ -18,6 +18,7 @@ import TasksPage from "./pages/TasksPage/TasksPage";
 import SigninPage from "./pages/SigninPage/SigninPage";
 import CustomersPage from "./pages/CustomersPage/CustomersPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
+import TaskDetails from "./components/TaskDetails/TaskDetails";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/team" element={<TeamPage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/tasks" element={<TasksPage />} />
+          <Route path="/tasks/:id" element={<TaskDetails />} />
           <Route path="/customers" element={<CustomersPage />} />
         </Routes>
       </BrowserRouter>
@@ -41,5 +43,6 @@ function App() {
 // TODO ajustar o botão de edit task, AJUSTAR A DATA NÃO TA FUNCIONANDO
 // TODO ajustar o user asignment pra caso não haja nenhum asignment
 // TODO considerar colocar divs com link para as atividades
+// TODO arrumar o filtro, search não funcionando
 
 export default App;

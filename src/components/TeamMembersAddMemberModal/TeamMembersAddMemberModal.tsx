@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./TeamMembersAddMemberModal.module.css";
-import { Button, Modal, Box, Typography } from "@mui/material";
+import { Button, Modal, Box, Typography, Fab } from "@mui/material";
 import TeamMembersAddMemberForm from "../TeamMembersAddMemberForm/TeamMembersAddMemberForm";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -34,14 +34,17 @@ const TeamMembersAddMemberModal: FC<TeamMembersAddMemberModalProps> = () => {
   return (
     <div className={styles.TeamMembersAddMemberModal}>
       <div>
-        <Button
+        {/* <Button
           onClick={handleOpen}
           sx={buttonStyle}
           variant="contained"
           startIcon={<AddIcon />}
         >
           Novo colaborador
-        </Button>
+        </Button> */}
+        <Fab color="primary" onClick={handleOpen} sx={buttonStyle}>
+          <AddIcon />
+        </Fab>
         <Modal
           open={open}
           onClose={handleClose}
