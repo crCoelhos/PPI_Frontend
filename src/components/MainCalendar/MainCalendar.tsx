@@ -5,6 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Task } from "../../interfaces/types";
 import ApiService from "../../services/api";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const localizer = momentLocalizer(moment);
 
@@ -14,6 +15,8 @@ const MainCalendar: FC<MainCalendarProps> = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskEvents, setTaskEvents] = useState<any[]>([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -26,6 +29,7 @@ const MainCalendar: FC<MainCalendarProps> = () => {
           end: moment(task.deadline).toDate(),
           title: task.name,
           domain: task.taskDomain,
+          id: task.id,
         }));
 
         {
@@ -64,6 +68,11 @@ const MainCalendar: FC<MainCalendarProps> = () => {
     };
   };
 
+  const handleEditClick = (eventId: any) => {
+    navigate(`/tasks/${eventId}`);
+    console.log("entrou: ", eventId);
+  };
+
   return (
     <div className="MainCalendar">
       <Calendar
@@ -73,6 +82,7 @@ const MainCalendar: FC<MainCalendarProps> = () => {
         events={taskEvents}
         style={{ height: "100vh" }}
         eventPropGetter={eventPropGetter}
+        onSelectEvent={(event) => handleEditClick(event.id)}
       />
     </div>
   );

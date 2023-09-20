@@ -109,3 +109,16 @@ export interface MetricData {
   overdueTasksCount: number;
   pausedTasksCount: number;
 }
+
+export interface LastMonthCompletedBalanceData {
+  totalEstimateValue: number;
+}
+export interface ThisMonthCompletedBalanceData {
+  totalEstimateValue: number;
+}
+export interface LastMonthCanceledBalanceData {
+  totalEstimateValue: number;
+}
+export interface ThisMonthCanceledBalanceData {
+  totalEstimateValue: number;
+}

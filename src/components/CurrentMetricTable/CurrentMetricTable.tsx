@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { CircularProgress } from "@mui/material";
 
 interface CurrentMetricTableProps {}
 
@@ -21,26 +22,29 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
   const [pausedTasksCount, setPausedTasksCount] = useState<number>(0);
   const [doingTasksCount, setDoingTasksCount] = useState<number>(0);
   const [overdueTasksCount, setOverdueTasksCount] = useState<number>(0);
+  const [isLoading, setIsloading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log("Fetching data...");
     const fetchData = async () => {
-      try {
-        const metricResponse = await ApiService.fetchData<MetricData>(
-          "admin/tasks/metric/2023/9"
-        );
-        setCanceledTasksCount(metricResponse.canceledTasksCount);
-        setCompletedTasksCount(metricResponse.completedTasksCount);
-        setPausedTasksCount(metricResponse.pausedTasksCount);
-        setDoingTasksCount(metricResponse.doingTasksCount);
-        setOverdueTasksCount(metricResponse.overdueTasksCount);
-      } catch (error) {
-        console.error(error);
-      }
+      if (isLoading)
+        try {
+          const metricResponse = await ApiService.fetchData<MetricData>(
+            "admin/tasks/metric/2023/9"
+          );
+          setCanceledTasksCount(metricResponse.canceledTasksCount);
+          setCompletedTasksCount(metricResponse.completedTasksCount);
+          setPausedTasksCount(metricResponse.pausedTasksCount);
+          setDoingTasksCount(metricResponse.doingTasksCount);
+          setOverdueTasksCount(metricResponse.overdueTasksCount);
+
+          setIsloading(false);
+        } catch (error) {
+          console.error(error);
+        }
     };
 
     fetchData();
-  }, []);
+  }, [isLoading]);
 
   const customColors = ["#659157", "#FFF689", "#2E294E", "#7A0200", "#F4442E"];
 
@@ -74,14 +78,18 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
 
   return (
     <div className={styles.CurrentMetricTable}>
-      <BarChart width={600} height={400} data={data}>
-        <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="value" />
-      </BarChart>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <BarChart width={600} height={400} data={data}>
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="value" />
+        </BarChart>
+      )}
     </div>
   );
 };

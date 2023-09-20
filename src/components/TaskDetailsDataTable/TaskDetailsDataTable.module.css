@@ -1,1 +1,15 @@
-.TaskDetailsDataTable {}
+.TaskDetailsDataTable {
+}
+
+.ActionButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  max-height: auto;
+  vertical-align: middle;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  margin: 12px;
+}

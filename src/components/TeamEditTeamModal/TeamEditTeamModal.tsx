@@ -21,7 +21,8 @@ const style = {
 };
 
 const buttonStyle = {
-  p: 2,
+  p: 1,
+  width: "112px"
 };
 
 const TeamEditTeamModal: FC<TeamEditTeamModalProps> = ({
@@ -46,7 +47,7 @@ const TeamEditTeamModal: FC<TeamEditTeamModalProps> = ({
           variant="contained"
           color="secondary"
           startIcon={<EditIcon />}
-        ></Button>
+        >Editar</Button>
         <Modal
           open={open}
           onClose={handleClose}

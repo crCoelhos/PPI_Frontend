@@ -15,7 +15,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import PreviewIcon from "@mui/icons-material/Preview";
+import RemoveRedEyeIcon  from "@mui/icons-material/RemoveRedEye";
 import ClearIcon from "@mui/icons-material/Clear";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
@@ -246,10 +246,10 @@ function TasksTable() {
           />
 
           <Button
-            onClick={() => handleViewTaskClick(rowData.id)} // Passar o ID diretamente
+            onClick={() => handleViewTaskClick(rowData.id)} 
             variant="contained"
             color="inherit"
-            startIcon={<PreviewIcon />}
+            startIcon={<RemoveRedEyeIcon  />}
             sx={buttonStyle}
           >
             Ver
@@ -306,8 +306,8 @@ function TasksTable() {
             <TableCell>Domínio da atividade</TableCell>
             <TableCell>Orçamento</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Ação</TableCell>
             <TableCell>Designado</TableCell>
+            <TableCell>Ação</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -320,8 +320,8 @@ function TasksTable() {
               <TableCell>{expertiseTemplate(task)}</TableCell>
               <TableCell>{estimativeTemplate(task)}</TableCell>
               <TableCell>{taskStatusTemplate(task)}</TableCell>
-              <TableCell>{actionsTemplate(task)}</TableCell>
               <TableCell>{userAssigneesTemplate(task)}</TableCell>
+              <TableCell>{actionsTemplate(task)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
