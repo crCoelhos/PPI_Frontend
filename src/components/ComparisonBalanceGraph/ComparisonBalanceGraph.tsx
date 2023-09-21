@@ -12,55 +12,33 @@ import {
 import ApiService from "../../services/api";
 
 import {
-  LastMonthCanceledBalanceData,
-  LastMonthCompletedBalanceData,
+  LastMonthBalanceData,
+  LastMonthTaskCountData,
   MetricData,
-  ThisMonthCanceledBalanceData,
-  ThisMonthCompletedBalanceData,
+  ThisMonthBalanceData,
+  ThisMonthTaskCountData,
 } from "../../interfaces/types";
 
 interface ComparisonBalanceGraphProps {}
 
 const ComparisonBalanceGraph: FC<ComparisonBalanceGraphProps> = () => {
-  const [currentCompletedBalance, setCurrentCompletedBalance] =
-    useState<number>();
-  const [lastCompletedBalance, setLastCompletedBalance] = useState<number>();
-
-  const [lastCanceledBalance, setLastCanceledBalance] = useState<number>();
-  const [currentCanceledBalance, setThisCanceledBalance] = useState<number>();
-
   const [isLoading, setIsloading] = useState<boolean>(true);
+
+  const [lastMonthBalanceData, setLastMonthBalanceData] =
+    useState<LastMonthBalanceData | null>(null);
+
+  const [currentMonthBalanceData, setCurrentMonthBalanceData] =
+    useState<ThisMonthBalanceData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (isLoading)
         try {
-          const lastCompletedResponse =
-            await ApiService.fetchData<LastMonthCompletedBalanceData>(
-              "admin/tasks/balance/completed/last"
-            );
-          setLastCompletedBalance(lastCompletedResponse.totalEstimateValue);
-
-          const currentCompletedResponse =
-            await ApiService.fetchData<ThisMonthCompletedBalanceData>(
-              "admin/tasks/balance/completed/current"
-            );
-
-          setCurrentCompletedBalance(
-            currentCompletedResponse.totalEstimateValue
+          const response = await ApiService.fetchData<LastMonthBalanceData>(
+            "admin/tasks/balance/last"
           );
-
-          const lastCanceledResponse =
-            await ApiService.fetchData<LastMonthCanceledBalanceData>(
-              "admin/tasks/balance/canceled/last"
-            );
-          setLastCanceledBalance(lastCanceledResponse.totalEstimateValue);
-
-          const currentCanceledResponse =
-            await ApiService.fetchData<ThisMonthCanceledBalanceData>(
-              "admin/tasks/balance/canceled/current"
-            );
-          setThisCanceledBalance(currentCanceledResponse.totalEstimateValue);
+          setLastMonthBalanceData(response);
+          setIsloading(false);
         } catch (error) {
           console.error(error);
         }
@@ -69,20 +47,35 @@ const ComparisonBalanceGraph: FC<ComparisonBalanceGraphProps> = () => {
     fetchData();
   }, [isLoading]);
 
-  console.log("rogerio: ", currentCompletedBalance, lastCompletedBalance);
-  console.log("leticia: ", currentCanceledBalance, lastCanceledBalance);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isLoading)
+        try {
+          const response = await ApiService.fetchData<ThisMonthBalanceData>(
+            "admin/tasks/balance/current"
+          );
+          setCurrentMonthBalanceData(response);
+          setIsloading(false);
+        } catch (error) {
+          console.error(error);
+        }
+    };
+    fetchData();
+  }, [isLoading]);
+
+
 
   const data = [
     {
       name: "Entregues",
-      atual: currentCompletedBalance,
-      passado: lastCompletedBalance,
+      atual: currentMonthBalanceData?.completedTasksBalance,
+      passado: lastMonthBalanceData?.completedTasksBalance,
       amt: 5500,
     },
     {
       name: "Cancelados",
-      atual: currentCanceledBalance,
-      passado: lastCanceledBalance,
+      atual: currentMonthBalanceData?.canceledTasksBalance,
+      passado: lastMonthBalanceData?.canceledTasksBalance,
       amt: 2210,
     },
   ];

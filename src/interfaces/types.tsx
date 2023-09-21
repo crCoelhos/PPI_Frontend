@@ -103,22 +103,38 @@ export interface TasksHeadCell {
 }
 
 export interface MetricData {
-  canceledTasksCount: number;
   completedTasksCount: number;
+  canceledTasksCount: number;
+  pausedTasksCount: number;
   doingTasksCount: number;
   overdueTasksCount: number;
-  pausedTasksCount: number;
 }
 
-export interface LastMonthCompletedBalanceData {
-  totalEstimateValue: number;
+export interface LastMonthBalanceData {
+  completedTasksBalance: number;
+  canceledTasksBalance: number;
+  pausedTasksBalance: number;
+  doingTasksBalance: number;
+  overdueTasksBalance: number;
 }
-export interface ThisMonthCompletedBalanceData {
-  totalEstimateValue: number;
+export interface ThisMonthBalanceData {
+  completedTasksBalance: number;
+  canceledTasksBalance: number;
+  pausedTasksBalance: number;
+  doingTasksBalance: number;
+  overdueTasksBalance: number;
 }
-export interface LastMonthCanceledBalanceData {
-  totalEstimateValue: number;
+export interface LastMonthTaskCountData {
+  completedTasksCount: number;
+  canceledTasksCount: number;
+  pausedTasksCount: number;
+  doingTasksCount: number;
+  overdueTasksCount: number;
 }
-export interface ThisMonthCanceledBalanceData {
-  totalEstimateValue: number;
+export interface ThisMonthTaskCountData {
+  completedTasksCount: number;
+  canceledTasksCount: number;
+  pausedTasksCount: number;
+  doingTasksCount: number;
+  overdueTasksCount: number;
 }

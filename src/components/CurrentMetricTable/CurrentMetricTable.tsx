@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./CurrentMetricTable.module.css";
 import axios from "axios";
 import ApiService from "../../services/api";
-import { MetricData } from "../../interfaces/types";
+import { LastMonthTaskCountData, MetricData, ThisMonthTaskCountData } from "../../interfaces/types";
 import {
   BarChart,
   Bar,
@@ -17,61 +17,72 @@ import { CircularProgress } from "@mui/material";
 interface CurrentMetricTableProps {}
 
 const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
-  const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
-  const [canceledTasksCount, setCanceledTasksCount] = useState<number>(0);
-  const [pausedTasksCount, setPausedTasksCount] = useState<number>(0);
-  const [doingTasksCount, setDoingTasksCount] = useState<number>(0);
-  const [overdueTasksCount, setOverdueTasksCount] = useState<number>(0);
+  const [lastMonthCountData, setLastMonthCountData] =
+    useState<LastMonthTaskCountData | null>(null);
+
+  const [currentMonthCountData, setCurrentMonthCountData] =
+    useState<ThisMonthTaskCountData | null>(null);
   const [isLoading, setIsloading] = useState<boolean>(true);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (isLoading)
+  //       try {
+  //         const response = await ApiService.fetchData<ThisMonthTaskCountData>(
+  //           "admin/tasks/metric/last"
+  //         );
+  //         setCurrentMonthCountData(response);
+  //         setIsloading(false);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //   };
+  //   fetchData();
+  // }, [isLoading]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (isLoading)
         try {
-          const metricResponse = await ApiService.fetchData<MetricData>(
-            "admin/tasks/metric/2023/9"
+          const response = await ApiService.fetchData<ThisMonthTaskCountData>(
+            "admin/tasks/metric/current"
           );
-          setCanceledTasksCount(metricResponse.canceledTasksCount);
-          setCompletedTasksCount(metricResponse.completedTasksCount);
-          setPausedTasksCount(metricResponse.pausedTasksCount);
-          setDoingTasksCount(metricResponse.doingTasksCount);
-          setOverdueTasksCount(metricResponse.overdueTasksCount);
-
+          setCurrentMonthCountData(response);
           setIsloading(false);
         } catch (error) {
           console.error(error);
         }
     };
-
     fetchData();
   }, [isLoading]);
 
-  const customColors = ["#659157", "#FFF689", "#2E294E", "#7A0200", "#F4442E"];
+
+  const customColors = ["#007f5f", "#FFF689", "#2E294E", "#7A0200", "#bc4749"];
 
   const data = [
     {
       name: "Concluídas",
-      value: completedTasksCount,
+      value: currentMonthCountData?.completedTasksCount,
       fill: customColors[0],
     },
     {
       name: "Pausadas",
-      value: pausedTasksCount,
+      value: currentMonthCountData?.pausedTasksCount,
       fill: customColors[1],
     },
     {
       name: "Andamento",
-      value: doingTasksCount,
+      value: currentMonthCountData?.doingTasksCount,
       fill: customColors[2],
     },
     {
       name: "Canceladas",
-      value: canceledTasksCount,
+      value: currentMonthCountData?.canceledTasksCount,
       fill: customColors[3],
     },
     {
       name: "Atrasadas",
-      value: overdueTasksCount,
+      value: currentMonthCountData?.overdueTasksCount,
       fill: customColors[4],
     },
   ];

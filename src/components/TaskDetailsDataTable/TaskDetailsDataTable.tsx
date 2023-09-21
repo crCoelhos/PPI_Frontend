@@ -55,7 +55,6 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Fetching user...");
     const fetchUsers = async () => {
       if (taskData?.usertask?.[0]?.id)
         try {
@@ -72,7 +71,6 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
   }, [taskData]);
 
   useEffect(() => {
-    console.log("Fetching expertises...");
     const fetchUsers = async () => {
       if (taskData?.usertask?.[0]?.id)
         try {
@@ -88,25 +86,23 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
     fetchUsers();
   }, [taskData]);
 
-  console.log("vai: ", expertises);
-
+  console.log(taskData);
   useEffect(() => {
-    console.log("Fetching customer...");
-    const fetchUsers = async () => {
+    const fetchCustomers = async () => {
       if (taskData?.customerId)
         try {
           const customerResponse = await ApiService.fetchData<CustomerData>(
             `admin/customer/${taskData?.customerId}`
           );
+          console.log("raquel :", customerResponse);
           setCustomer(customerResponse);
         } catch (error) {
           console.error(error);
         }
     };
 
-    fetchUsers();
+    fetchCustomers();
   }, [taskData]);
-  console.log("leticia: ", customer);
 
   async function handleDelete() {
     if (selectedTask?.id) {
@@ -349,7 +345,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
                       Valor estimado da atribuição:
                     </Typography>
                     <Typography variant="body1" sx={activityContentStyle}>
-                      {taskData?.estimateValue || (
+                      {`R$ ${taskData?.estimateValue}` || (
                         <CircularProgress size={20} />
                       )}
                     </Typography>
