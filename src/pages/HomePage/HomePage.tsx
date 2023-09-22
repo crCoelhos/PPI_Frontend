@@ -59,15 +59,18 @@ const HomePage: React.FC<HomePageProps> = () => {
               </Grid>
             </Grid>
 
-            <hr />
+            {/* <hr /> */}
 
-            <Grid container spacing={12}>
+            {/* <Grid container spacing={12}>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
-                <h2>Acompanhamento dos ultimos 60 dias</h2>
+                <h2>
+                  Acompanhamento dos ultimos 60 dias (conclusões e
+                  cancelamentos)
+                </h2>
 
                 <ComparisonTaskCountGraph />
               </Grid>
-            </Grid>
+            </Grid> */}
           </div>
         ) : (
           <p>Nenhum dado de usuário encontrado.</p>

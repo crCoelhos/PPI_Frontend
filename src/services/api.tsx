@@ -19,7 +19,7 @@ class ApiService {
 
   private setupInterceptors() {
     const storedToken =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
+      localStorage.getItem("user") || localStorage.getItem("user");
 
     if (storedToken) {
       const tokenObject = JSON.parse(storedToken);

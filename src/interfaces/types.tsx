@@ -24,7 +24,10 @@ export interface UserData {
     name: string;
   };
 }
-
+export interface LoginResponse {
+  token: string;
+  userData: UserData;
+}
 export interface CustomerData {
   id: number;
   businessName: string;

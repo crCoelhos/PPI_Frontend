@@ -107,8 +107,8 @@ export default function PrimaryAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const userData = useSessionStorageUserData();
-
+  const { userData } = useSessionStorageUserData();
+  // console.log(storedName);
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -126,8 +126,8 @@ export default function PrimaryAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMyAccountClick}>My account</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
+      <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -149,27 +149,9 @@ export default function PrimaryAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      {/* <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -179,8 +161,8 @@ export default function PrimaryAppBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+        <p>Perfil</p>
+      </MenuItem> */}
     </Menu>
   );
 
@@ -231,9 +213,7 @@ export default function PrimaryAppBar() {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={0} color="error">
-                <NotificationsIcon />
-              </Badge>
+              <Badge badgeContent={0} color="error"></Badge>
             </IconButton>
             <IconButton
               size="large"

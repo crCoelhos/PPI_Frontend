@@ -41,13 +41,13 @@ function UsersTable() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    console.log("Fetching users...");
+    // console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
         const res = await ApiService.fetchData<UserData[]>("admin/users/");
-        console.log(res);
+        // console.log(res);
         setIsLoading(false);
-        console.log("users fetched:", res);
+        // console.log("users fetched:", res);
       } catch (error) {
         console.error(error);
         setIsLoading(false);
@@ -58,7 +58,7 @@ function UsersTable() {
   }, []);
 
   useEffect(() => {
-    console.log("Fetching users...");
+    // console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
         const userResponse = await ApiService.fetchData<UserData[]>(

@@ -311,6 +311,7 @@ const ComparisonTaskCountGraph: FC<ComparisonTaskCountGraphProps> = () => {
     <div className={styles.ComparisonTaskCountGraph}>
       <Grid container spacing={2}>
         <Grid item xl={6} lg={6} md={12} sm={12} xs={12} p={10}>
+
           <PieChart width={550} height={450}>
             <Pie
               activeIndex={activeIndex}
@@ -323,7 +324,6 @@ const ComparisonTaskCountGraph: FC<ComparisonTaskCountGraphProps> = () => {
               outerRadius={120}
               startAngle={180}
               endAngle={0}
-              paddingAngle={3}
               labelLine={false}
               label={renderCustomizedLabel}
               legendType="circle"
@@ -345,7 +345,6 @@ const ComparisonTaskCountGraph: FC<ComparisonTaskCountGraphProps> = () => {
               outerRadius={120}
               startAngle={180}
               endAngle={0}
-              paddingAngle={3}
               labelLine={false}
               label={renderCustomizedLabel}
               legendType="circle"

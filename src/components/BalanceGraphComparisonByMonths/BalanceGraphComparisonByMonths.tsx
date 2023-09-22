@@ -91,9 +91,9 @@ const BalanceGraphComparisonByMonths: FC<
       const firstMonthResponse = await ApiService.fetchData<BalanceData>(
         `admin/tasks/balance/2023/${mapMonthToNumber(firstMonthName)}`
       );
-      console.log(
-        `admin/tasks/balance/2023/${mapMonthToNumber(firstMonthName)}`
-      );
+      // console.log(
+      //   `admin/tasks/balance/2023/${mapMonthToNumber(firstMonthName)}`
+      // );
 
       setFirstMonthBalanceData(firstMonthResponse);
       // console.log(firstMonthResponse);
@@ -102,12 +102,12 @@ const BalanceGraphComparisonByMonths: FC<
       );
       setSecondMonthBalanceData(secondMonthResponse);
 
-      console.log(
-        `admin/tasks/balance/2023/${mapMonthToNumber(secondMonthName)}`
-      );
+      // console.log(
+      //   `admin/tasks/balance/2023/${mapMonthToNumber(secondMonthName)}`
+      // );
 
-      console.log("Dados do primeiro mês:", firstMonthResponse);
-      console.log("Dados do segundo mês:", secondMonthResponse);
+      // console.log("Dados do primeiro mês:", firstMonthResponse);
+      // console.log("Dados do segundo mês:", secondMonthResponse);
 
       setRerenderKey((prev) => prev + 1);
     } catch (error) {
@@ -161,7 +161,7 @@ const BalanceGraphComparisonByMonths: FC<
           value={firstMonthName}
           onChange={(event) => {
             const selectedValue = event.target.value as string;
-            console.log("Mês A selecionado:", selectedValue);
+            // console.log("Mês A selecionado:", selectedValue);
             setFirstMonthName(selectedValue);
           }}
           input={<OutlinedInput label="firstMonth" />}
@@ -183,7 +183,7 @@ const BalanceGraphComparisonByMonths: FC<
           value={secondMonthName}
           onChange={(event) => {
             const selectedValue = event.target.value as string;
-            console.log("Mês B selecionado:", selectedValue);
+            // console.log("Mês B selecionado:", selectedValue);
             setSecondMonthName(selectedValue);
           }}
           input={<OutlinedInput label="secondMonth" />}

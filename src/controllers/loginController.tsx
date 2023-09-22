@@ -49,16 +49,16 @@ const useLoginController = () => {
   };
 
   const setSessionUser = (userData: UserData) => {
-    sessionStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const getSessionUser = (): UserData => {
-    const storedUserData = sessionStorage.getItem("user");
+    const storedUserData = localStorage.getItem("user");
     return storedUserData ? JSON.parse(storedUserData) : null;
   };
 
   const logout = () => {
-    sessionStorage.removeItem("user");
+    localStorage.removeItem("user");
     setUser(null);
     window.location.reload();
     localStorage.clear();

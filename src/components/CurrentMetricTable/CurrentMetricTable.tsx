@@ -2,7 +2,11 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./CurrentMetricTable.module.css";
 import axios from "axios";
 import ApiService from "../../services/api";
-import { LastMonthTaskCountData, MetricData, ThisMonthTaskCountData } from "../../interfaces/types";
+import {
+  LastMonthTaskCountData,
+  MetricData,
+  ThisMonthTaskCountData,
+} from "../../interfaces/types";
 import {
   BarChart,
   Bar,
@@ -23,6 +27,7 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
   const [currentMonthCountData, setCurrentMonthCountData] =
     useState<ThisMonthTaskCountData | null>(null);
   const [isLoading, setIsloading] = useState<boolean>(true);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -48,6 +53,8 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
             "admin/tasks/metric/current"
           );
           setCurrentMonthCountData(response);
+
+          setRefreshKey(refreshKey + 1);
           setIsloading(false);
         } catch (error) {
           console.error(error);
@@ -55,7 +62,6 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
     };
     fetchData();
   }, [isLoading]);
-
 
   const customColors = ["#007f5f", "#FFF689", "#2E294E", "#7A0200", "#bc4749"];
 

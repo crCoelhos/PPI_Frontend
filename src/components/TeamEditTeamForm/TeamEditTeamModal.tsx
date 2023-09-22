@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import styles from "./TeamEditTeamModal.module.css";
 import { ThemeProvider } from "@emotion/react";
 import ApiService from "../../services/api";
@@ -29,6 +29,8 @@ import {
   UserData,
 } from "../../interfaces/types";
 import UserController from "../../controllers/userController";
+import GenericSuccessToast from "../GenericSuccessToast/GenericSuccessToast";
+import GenericFailToast from "../GenericFailToast/GenericFailToast";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
@@ -43,20 +45,27 @@ interface TeamEditTeamFormProps {
 const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
   const [customers, setCustomers] = React.useState<CustomerData[]>([]);
   const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
-  const [selectedExpertise, setSelectedExpertise] = React.useState("");
-  const [selectedCustomer, setSelectedCustomer] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [selectedExpertise, setSelectedExpertise] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [name, setName] = React.useState("");
-  const [cpf, setCpf] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [contact, setContact] = React.useState("");
-  const [birthdate, setBirthdate] = React.useState("");
-  const [hireDate, setHireDate] = React.useState("");
-  const [roleId, setRoleId] = React.useState("");
-  const [sex, setSex] = React.useState("");
-  const [expertiseId, setExpertiseId] = React.useState("");
-  const [is_active, setIsActive] = React.useState(false);
+  const [responseError, setResponseError] = useState<string | null>("");
+
+  const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [hireDate, setHireDate] = useState("");
+  const [roleId, setRoleId] = useState("");
+  const [sex, setSex] = useState("");
+  const [expertiseId, setExpertiseId] = useState("");
+  const [is_active, setIsActive] = useState(false);
+
+  const [showToast, setShowToast] = useState(false);
+  const [showFailToast, setShowFailToast] = useState(false);
+
+  const [shouldPreventDefault, setShouldPreventDefault] = useState(true);
 
   // const [user, setUser] = React.useState<UserData>();
   const [user, setUser] = React.useState<UserData>({
@@ -86,7 +95,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
       let accessValue: string = accessHeaderValue || " ";
       try {
         const storedToken =
-          localStorage.getItem("user") || sessionStorage.getItem("user");
+          localStorage.getItem("user") || localStorage.getItem("user");
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
@@ -101,7 +110,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
               },
             }
           );
-          console.log(userResponse.data);
+          // console.log(userResponse.data);
           setUser(userResponse.data);
           setIsActive(userResponse.data.is_active);
 
@@ -117,12 +126,14 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
           );
 
           setExpertises(expertiseResponse.data);
-          console.log(expertiseResponse.data);
         }
       } catch (error) {
+        setShowFailToast(true);
         if (axios.isAxiosError(error)) {
+          setShowFailToast(true);
           console.error("Error:", error.response?.data);
         } else {
+          setShowFailToast(true);
           console.error("Error:", error);
         }
       }
@@ -131,12 +142,14 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
     fetchUsers();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
     const storedToken =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
+      localStorage.getItem("user") || localStorage.getItem("user");
     if (storedToken) {
       const tokenObject = JSON.parse(storedToken);
       tokenValue = tokenObject.token;
@@ -150,17 +163,32 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
           },
         });
 
-        console.log("enviado: ", user);
-
-        console.log("Tarefa atualizada com sucesso!");
+        setShowToast(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } catch (error) {
-        console.error("Erro ao atualizar a tarefa:", error);
+        if (error instanceof Error) {
+          setResponseError(error.message || null);
+          console.error("Erro ao atualizar o colaborador:", error);
+        } else {
+          setResponseError("Erro desconhecido");
+          console.error("Erro desconhecido ao atualizar o colaborador:", error);
+        }
       }
     }
   };
 
   return (
     <div className={styles.TeamEditTeamForm}>
+      <GenericFailToast
+        message={`Atualização não realizada! ${responseError}`}
+        show={showFailToast}
+      />
+      <GenericSuccessToast
+        message={"Funcionário atualizado com sucesso!"}
+        show={showToast}
+      />
       <ThemeProvider theme={defaultTheme}>
         <Grid item sx={{ p: 2 }}>
           <Box
@@ -174,7 +202,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
               <EditIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Editar atividade
+              Editar colaborador
             </Typography>
             <Box
               component="form"
@@ -268,7 +296,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
                         expertiseId: selectedExpertiseId, // Atualize o expertiseId de user
                       }));
                       setExpertiseId(selectedExpertiseId); // Atualize o expertiseId separadamente, se necessário
-                      console.log(selectedExpertiseId);
+                      // console.log(selectedExpertiseId);
                     }}
                   >
                     {expertises.map((expertise) => (

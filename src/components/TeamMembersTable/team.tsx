@@ -33,7 +33,7 @@ function TasksTable() {
   };
 
   useEffect(() => {
-    console.log("Fetching users...");
+    // console.log("Fetching users...");
     const fetchTasks = async () => {
       try {
         const res = await ApiService.fetchData<UserData[]>("admin/users/");

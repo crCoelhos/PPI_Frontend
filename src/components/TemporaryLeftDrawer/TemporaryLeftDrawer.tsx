@@ -1,13 +1,11 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-
 import IconButton from "@mui/material/IconButton";
 import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -39,6 +37,23 @@ const iconMapping: { [key: string]: JSX.Element } = {
   Logout: <ExitToAppIcon />,
 };
 
+const items = ["Home", "Schedule", "Tasks", "Team", "Customers"];
+
+function getListItemText(text: string): string {
+  switch (text) {
+    case "Schedule":
+      return "Cronograma";
+    case "Tasks":
+      return "Atividades";
+    case "Team":
+      return "Colaboradores";
+    case "Customers":
+      return "Clientes";
+    default:
+      return text;
+  }
+}
+
 const TemporaryLeftDrawer: React.FC<TemporaryLeftDrawerProps> = ({
   open,
   onClose,
@@ -65,26 +80,16 @@ const TemporaryLeftDrawer: React.FC<TemporaryLeftDrawerProps> = ({
         onKeyDown={toggleDrawer("left", false)}
       >
         <List>
-          {["Home", "Schedule", "Tasks", "Team", "Customers"].map((text, index) => (
+          {items.map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton component={Link} to={`/${text.toLowerCase()}`}>
                 <ListItemIcon>{iconMapping[text]}</ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={getListItemText(text)} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
-        <List>
-          {["Announcements", "Logout"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton component={Link} to={`/${text.toLowerCase()}`}>
-                <ListItemIcon>{iconMapping[text]}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
       </Box>
     </Drawer>
   );

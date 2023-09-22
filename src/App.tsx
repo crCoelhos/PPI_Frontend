@@ -19,6 +19,7 @@ import SigninPage from "./pages/SigninPage/SigninPage";
 import CustomersPage from "./pages/CustomersPage/CustomersPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
 import TaskDetails from "./components/TaskDetails/TaskDetails";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signin" element={<SigninPage />} />
 
           <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/tasks" element={<TasksPage />} />

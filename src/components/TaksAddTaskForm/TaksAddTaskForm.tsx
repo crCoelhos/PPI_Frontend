@@ -67,7 +67,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
       let accessValue: string = accessHeaderValue || " ";
       try {
         const storedToken =
-          localStorage.getItem("user") || sessionStorage.getItem("user");
+          localStorage.getItem("user") || localStorage.getItem("user");
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
@@ -97,7 +97,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
           setExpertises(expertiseResponse.data);
         }
 
-        console.log("Request successful");
+        // console.log("Request successful");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error:", error.response?.data);
@@ -228,7 +228,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                   </LocalizationProvider>
 
                   <InputLabel id="customer-select-label">
-                    Oriem da atividade
+                    Origem da atividade
                   </InputLabel>
                   <Select
                     className={styles.SelectOptions}

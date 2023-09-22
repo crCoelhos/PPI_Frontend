@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./TasksEditTaskForm.module.css";
 import { ThemeProvider } from "@emotion/react";
 import ApiService from "../../services/api";
@@ -26,6 +26,8 @@ import {
   Task,
   UserData,
 } from "../../interfaces/types";
+import GenericFailToast from "../GenericFailToast/GenericFailToast";
+import GenericSuccessToast from "../GenericSuccessToast/GenericSuccessToast";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
@@ -41,21 +43,23 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   onCancel,
   itemId,
 }) => {
-  const [customers, setCustomers] = React.useState<CustomerData[]>([]);
-  const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
-  const [selectedTaskDomain, setSelectedTaskDomain] = React.useState("");
-  const [selectedCustomer, setSelectedCustomer] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [task, setTask] = React.useState<Task | undefined>(undefined);
-  const [users, setUsers] = React.useState<UserData[]>([]);
-  const [newAssignment, setNewAssignment] = React.useState<boolean>(false);
+  const [customers, setCustomers] = useState<CustomerData[]>([]);
+  const [expertises, setExpertises] = useState<ExpertiseData[]>([]);
+  const [selectedTaskDomain, setSelectedTaskDomain] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [task, setTask] = useState<Task | undefined>(undefined);
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [newAssignment, setNewAssignment] = useState<boolean>(false);
 
-  const [selectedUserId, setSelectedUserId] = React.useState<number | string>(
-    ""
-  );
-  const [previousSelectedUserId, setPreviousSelectedUserId] = React.useState<
+  const [selectedUserId, setSelectedUserId] = useState<number | string>("");
+  const [previousSelectedUserId, setPreviousSelectedUserId] = useState<
     number | string
   >("");
+
+  const [responseError, setResponseError] = useState<string | null>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [showFailToast, setShowFailToast] = useState<boolean>(false);
 
   const {
     name,
@@ -155,16 +159,16 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
   }, []);
 
   const handleSubmit = async (e: any) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     const assignmentDate = new Date();
-    console.log(newAssignment);
+    // console.log(newAssignment);
 
     let tokenValue: string = "";
     let accessValue: string = accessHeaderValue || " ";
 
     const storedToken =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
+      localStorage.getItem("user") || localStorage.getItem("user");
     if (storedToken) {
       const tokenObject = JSON.parse(storedToken);
       tokenValue = tokenObject.token;
@@ -186,11 +190,11 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
               Access: accessValue,
             },
           });
-          console.log(
-            "Associação da tarefa com o usuário atualizada com sucesso!"
-          );
+          // console.log(
+          //   "Associação da tarefa com o usuário atualizada com sucesso!"
+          // );
         } else if (selectedUserId !== previousSelectedUserId) {
-          console.log("entramos aqui");
+          // console.log("entramos aqui");
           const userTaskId = task?.usertask?.[0]?.id;
 
           await axios.put(
@@ -204,9 +208,11 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
               },
             }
           );
-          console.log(
-            "Associação da tarefa com o usuário atualizada com sucesso!"
-          );
+
+          setShowToast(true);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         }
 
         await axios.put(`${appURL}admin/task/${task?.id}`, task, {
@@ -217,14 +223,34 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
           },
         });
 
-        console.log("Tarefa atualizada com sucesso!");
+        setShowToast(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } catch (error) {
-        console.error("Erro ao atualizar a tarefa:", error);
+        if (error instanceof Error) {
+          setResponseError(error.message || null);
+          console.error("Erro ao atualizar o colaborador:", error);
+        } else {
+          setResponseError("Erro desconhecido");
+          console.error("Erro desconhecido ao atualizar o colaborador:", error);
+        }
       }
     }
   };
+
   return (
     <div className={styles.TasksEditTaskForm}>
+      <GenericSuccessToast
+        message={"Tarefa atualizada com sucesso!"}
+        show={showToast}
+      />
+
+      <GenericFailToast
+        message={`Atualização não realizada! ${responseError}`}
+        show={showFailToast}
+      />
+
       <ThemeProvider theme={defaultTheme}>
         <Grid item sx={{ p: 2 }}>
           <Box

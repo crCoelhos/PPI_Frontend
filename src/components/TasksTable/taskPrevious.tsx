@@ -33,13 +33,13 @@ function TasksTable() {
   };
 
   useEffect(() => {
-    console.log("Fetching tasks...");
+    // console.log("Fetching tasks...");
     const fetchTasks = async () => {
       try {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
         setTasks(res);
         setIsLoading(false);
-        console.log("tasks fetched:", res);
+        // console.log("tasks fetched:", res);
       } catch (error) {
         console.error(error);
         setIsLoading(false);
@@ -50,7 +50,7 @@ function TasksTable() {
   }, []);
 
   useEffect(() => {
-    console.log("Fetching users...");
+    // console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
         const userResponse = await ApiService.fetchData<UserData[]>(

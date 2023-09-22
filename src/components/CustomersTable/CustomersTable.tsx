@@ -77,7 +77,7 @@ const CustomersTable: FC<CustomersTableProps> = () => {
       let accessValue: string = accessHeaderValue || " ";
       try {
         const storedToken =
-          localStorage.getItem("user") || sessionStorage.getItem("user");
+          localStorage.getItem("user") || localStorage.getItem("user");
         if (storedToken) {
           const tokenObject = JSON.parse(storedToken);
           tokenValue = tokenObject.token;
@@ -95,7 +95,7 @@ const CustomersTable: FC<CustomersTableProps> = () => {
           setCustomers(response.data);
         }
 
-        console.log("Request successful:", customers);
+        // console.log("Request successful:", customers);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error:", error.response?.data);
@@ -190,7 +190,8 @@ const CustomersTable: FC<CustomersTableProps> = () => {
         const updatedCustomers = customers.filter(
           (customer) => customer.id !== selectedCustomer.id
         );
-        setCustomers(updatedCustomers);
+
+        atualizarClientes(updatedCustomers);
 
         closeDeleteModal();
       } catch (error) {
@@ -199,6 +200,10 @@ const CustomersTable: FC<CustomersTableProps> = () => {
     }
   }
 
+  const atualizarClientes = (novaListaClientes: CustomerData[]) => {
+    setCustomers(novaListaClientes);
+  };
+  
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };
@@ -233,7 +238,7 @@ const CustomersTable: FC<CustomersTableProps> = () => {
           onClose={closeDeleteModal}
           onDelete={handleDelete}
           isOpen={true}
-          itemClass="user"
+          itemClass="customer"
           itemId={rowData?.id}
         />
       </>

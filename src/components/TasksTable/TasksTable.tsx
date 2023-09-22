@@ -40,14 +40,14 @@ function TasksTable() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Fetching tasks...");
+    // console.log("Fetching tasks...");
     const fetchTasks = async () => {
       try {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
         setTasks(res);
         setFilteredTasks(res);
         setIsLoading(false);
-        console.log("tasks fetched:", res);
+        // console.log("tasks fetched:", res);
       } catch (error) {
         console.error(error);
         setIsLoading(false);
@@ -58,7 +58,7 @@ function TasksTable() {
   }, []);
 
   useEffect(() => {
-    console.log("Fetching users...");
+    // console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
         const userResponse = await ApiService.fetchData<UserData[]>(
@@ -222,7 +222,7 @@ function TasksTable() {
 
   const handleViewTaskClick = (taskId: number) => {
     navigate(`/tasks/${taskId}`);
-    console.log(taskId);
+    // console.log(taskId);
   };
 
   const actionsTemplate = (rowData: Task) => {
@@ -292,7 +292,7 @@ function TasksTable() {
         value={globalFilter}
         onChange={(e) => {
           setGlobalFilter(e.target.value);
-          console.log(e.target.value); // Adicione este console.log para verificar o valor
+          // console.log(e.target.value); // Adicione este console.log para verificar o valor
         }}
       />
 

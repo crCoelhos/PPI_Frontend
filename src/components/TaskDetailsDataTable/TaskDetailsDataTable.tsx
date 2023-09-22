@@ -86,7 +86,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
     fetchUsers();
   }, [taskData]);
 
-  console.log(taskData);
+  // console.log(taskData);
   useEffect(() => {
     const fetchCustomers = async () => {
       if (taskData?.customerId)
@@ -94,7 +94,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
           const customerResponse = await ApiService.fetchData<CustomerData>(
             `admin/customer/${taskData?.customerId}`
           );
-          console.log("raquel :", customerResponse);
+          // console.log("raquel :", customerResponse);
           setCustomer(customerResponse);
         } catch (error) {
           console.error(error);
@@ -107,7 +107,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
   async function handleDelete() {
     if (selectedTask?.id) {
       try {
-        console.log("deletou");
+        // console.log("deletou");
         closeDeleteModal();
       } catch (error) {
         console.error("Erro ao excluir a tarefa:", error);

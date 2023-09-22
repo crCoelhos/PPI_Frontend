@@ -41,7 +41,7 @@ const YearBalanceGraph: FC<YearBalanceGraphProps> = () => {
     fetchData();
   }, [isLoading]);
 
-  console.log(allYearBalance);
+  // console.log(allYearBalance);
 
   const data = allYearBalance
     ?.filter((item) => item.balance !== null)
@@ -50,7 +50,7 @@ const YearBalanceGraph: FC<YearBalanceGraphProps> = () => {
       Balanço: item.balance as number,
     }));
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className={styles.YearBalanceGraph}>
