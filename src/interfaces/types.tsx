@@ -109,6 +109,13 @@ export interface MetricData {
   doingTasksCount: number;
   overdueTasksCount: number;
 }
+export interface BalanceData {
+  completedTasksBalance: number;
+  canceledTasksBalance: number;
+  pausedTasksBalance: number;
+  doingTasksBalance: number;
+  overdueTasksBalance: number;
+}
 
 export interface LastMonthBalanceData {
   completedTasksBalance: number;
@@ -137,4 +144,10 @@ export interface ThisMonthTaskCountData {
   pausedTasksCount: number;
   doingTasksCount: number;
   overdueTasksCount: number;
+}
+
+export interface MonthlyBalance {
+  year: number;
+  month: number;
+  balance: number | null;
 }

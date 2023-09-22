@@ -14,6 +14,8 @@ import {
 import axios from "axios";
 import styles from "./CustomersTable.module.css";
 import { CustomersHeadCell, CustomerData } from "../../interfaces/types";
+import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
+import TeamEditTeamModal from "../TeamEditTeamForm/TeamEditTeamModal";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
@@ -24,6 +26,12 @@ const CustomersTable: FC<CustomersTableProps> = () => {
   const [orderBy, setOrderBy] = useState<keyof CustomerData>("businessName");
   const [order, setOrder] = React.useState<Order>("asc");
   // const [selected, setSelected] = useState<number[]>([]);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedCustomer, setselectedCustomer] = useState<CustomerData | null>(
+    null
+  ); // Use selectedUser para armazenar a tarefa selecionada
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -176,8 +184,64 @@ const CustomersTable: FC<CustomersTableProps> = () => {
 
   // const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
+  async function handleDelete() {
+    if (selectedCustomer?.id) {
+      try {
+        const updatedCustomers = customers.filter(
+          (customer) => customer.id !== selectedCustomer.id
+        );
+        setCustomers(updatedCustomers);
+
+        closeDeleteModal();
+      } catch (error) {
+        console.error("Erro ao excluir o cliente:", error);
+      }
+    }
+  }
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteClick = (customer: CustomerData) => {
+    setselectedCustomer(customer);
+    openDeleteModal();
+  };
+
+  const handleEditClick = (customer: CustomerData) => {
+    setselectedCustomer(customer);
+    openEditModal();
+  };
+
+  const actionsTemplate = (rowData: CustomerData) => {
+    return (
+      <>
+        <GenericDeleteModal
+          open={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onDelete={handleDelete}
+          isOpen={true}
+          itemClass="user"
+          itemId={rowData?.id}
+        />
+      </>
+    );
+  };
+
   return (
-    <TableContainer>
+    <TableContainer className={styles.CustomersTableContent}>
       <TextField
         label="Pesquisar"
         value={searchValue}
@@ -186,40 +250,23 @@ const CustomersTable: FC<CustomersTableProps> = () => {
       <Table className={styles.CustomersTable}>
         <TableHead>
           <TableRow>
-            {headCells.map((headCell) => (
-              <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? "right" : "left"}
-                padding={headCell.disablePadding ? "none" : "normal"}
-                sortDirection={orderBy === headCell.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ? (
-                    <Box component="span" sx={visuallyHidden}></Box>
-                  ) : null}
-                </TableSortLabel>
-              </TableCell>
-            ))}
+            <TableCell>Empresa</TableCell>
+            <TableCell>CNPJ</TableCell>
+            <TableCell>Representante</TableCell>
+            <TableCell>Categoria</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Ação</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {sortedCustomers.map((customer) => (
-            <TableRow
-              key={customer.id}
-              hover
-            >
+            <TableRow key={customer.id} hover>
               <TableCell>{customer.businessName}</TableCell>
               <TableCell>{customer.cnpj}</TableCell>
               <TableCell>{customer.contactName}</TableCell>
               <TableCell align="right">{customer.size}</TableCell>
-              <TableCell>
-                {!customer.isActive ? "Inativo" : "Ativo"}
-              </TableCell>
+              <TableCell>{!customer.isActive ? "Inativo" : "Ativo"}</TableCell>
+              <TableCell>{actionsTemplate(customer)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -227,6 +274,5 @@ const CustomersTable: FC<CustomersTableProps> = () => {
     </TableContainer>
   );
 };
-
 
 export default CustomersTable;

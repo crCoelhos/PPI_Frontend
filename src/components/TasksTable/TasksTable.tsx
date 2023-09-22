@@ -286,7 +286,7 @@ function TasksTable() {
   };
 
   return (
-    <TableContainer>
+    <TableContainer className={styles.TaskTableContent}>
       <TextField
         label="Buscar tarefas"
         value={globalFilter}

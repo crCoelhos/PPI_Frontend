@@ -7,9 +7,17 @@ import CurrentMetricTable from "../../components/CurrentMetricTable/CurrentMetri
 import ComparisonBalanceGraph from "../../components/ComparisonBalanceGraph/ComparisonBalanceGraph";
 import { Grid } from "@mui/material";
 import ComparisonTaskCountGraph from "../../components/ComparisonTaskCountGraph/ComparisonTaskCountGraph";
+import YearBalanceGraph from "../../components/YearBalanceGraph/YearBalanceGraph";
+import BalanceGraphComparisonByMonths from "../../components/BalanceGraphComparisonByMonths/BalanceGraphComparisonByMonths";
 
 interface HomePageProps {}
-const currentDate = Date();
+
+const currentDate = new Date();
+
+// Obtenha o mês e o ano da data
+const month = currentDate.toLocaleString("pt-BR", { month: "long" });
+const year = currentDate.getFullYear();
+
 const HomePage: React.FC<HomePageProps> = () => {
   const { userData } = useSessionStorageUserData();
 
@@ -19,9 +27,13 @@ const HomePage: React.FC<HomePageProps> = () => {
       <div>
         {userData ? (
           <div>
-            <h1>Métricas, com base na data: {currentDate}</h1>
+            <h1>
+              Métricas, com base no periodo de {month}/{year}
+            </h1>
 
-            <Grid container spacing={2}>
+            <hr />
+
+            <Grid container spacing={12}>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
                 <h2>Métricas das tarefas no mês {} por situação</h2>
                 <CurrentMetricTable />
@@ -31,13 +43,28 @@ const HomePage: React.FC<HomePageProps> = () => {
                 <ComparisonBalanceGraph />
               </Grid>
             </Grid>
-            <Grid container spacing={2}>
+
+            <hr />
+
+            <Grid container spacing={12}>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
-                <CurrentMetricTable />
+                <h2>Balanço anual</h2>
+
+                <YearBalanceGraph />
+              </Grid>
+              <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+                <h2>Comparativo de mes sob demanda</h2>
+
+                <BalanceGraphComparisonByMonths />
               </Grid>
             </Grid>
-            <Grid container spacing={2}>
+
+            <hr />
+
+            <Grid container spacing={12}>
               <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+                <h2>Acompanhamento dos ultimos 60 dias</h2>
+
                 <ComparisonTaskCountGraph />
               </Grid>
             </Grid>

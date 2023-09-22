@@ -80,7 +80,6 @@ function UsersTable() {
           (user) => user.id !== selectedUser.id
         );
         setUsers(updatedUsers);
-
         closeDeleteModal();
       } catch (error) {
         console.error("Erro ao excluir a tarefa:", error);
@@ -191,12 +190,12 @@ function UsersTable() {
   };
 
   return (
-    <TableContainer>
-      <TextField
+    <TableContainer className={styles.TeamMembersTable}>
+      {/* <TextField
         label="Buscar funcionário"
         value={globalFilter}
         onChange={(e) => setGlobalFilter(e.target.value)}
-      />
+      /> */}
       <Table className={styles.UsersTable}>
         <TableHead>
           <TableRow>
@@ -204,7 +203,7 @@ function UsersTable() {
             <TableCell>Email</TableCell>
             <TableCell>Nascimento</TableCell>
             <TableCell>Data do contratação</TableCell>
-            <TableCell>Domínio <del></del> atividade</TableCell>
+            <TableCell>Domínio da atividade</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Ação</TableCell>
           </TableRow>

@@ -97,7 +97,7 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend />
+          {/* <Legend /> */}
           <Bar dataKey="value" />
         </BarChart>
       )}
