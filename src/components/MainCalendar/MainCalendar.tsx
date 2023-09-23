@@ -95,7 +95,7 @@ const MainCalendar: FC<MainCalendarProps> = () => {
   };
 
   const filteredTaskEvents = filterTasksByStatus(selectedStatus);
-  console.log(filteredTaskEvents);
+  // console.log(filteredTaskEvents);
 
   return (
     <div className="MainCalendar">

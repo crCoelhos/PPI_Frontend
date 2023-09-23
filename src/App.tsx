@@ -20,6 +20,7 @@ import CustomersPage from "./pages/CustomersPage/CustomersPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
 import TaskDetails from "./components/TaskDetails/TaskDetails";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import PasswordRecoveryPage from "./pages/PasswordRecoveryPage/PasswordRecoveryPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<SigninPage />} />
           <Route path="/login" element={<SigninPage />} />
           <Route path="/signin" element={<SigninPage />} />
+          <Route path="/password-recovery" element={<PasswordRecoveryPage />} />
 
           <Route path="/home" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />

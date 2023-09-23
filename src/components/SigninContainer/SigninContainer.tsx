@@ -5,7 +5,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -14,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import piwhite from "../../assets/images/ppi-new-logo-branca.png";
 import useLoginController from "../../controllers/loginController";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import GenericFailToast from "../GenericFailToast/GenericFailToast";
 import GenericSuccessToast from "../GenericSuccessToast/GenericSuccessToast";
 import { useState } from "react";
@@ -28,7 +27,7 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://2pistudio.com.br" target="_blank">
+      <Link color="inherit" to="https://2pistudio.com.br" target="_blank">
         2Pi Studio
       </Link>
       {new Date().getFullYear()}
@@ -156,10 +155,6 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
                     onChange={handlePasswordChange}
                     required
                   />
-                  {/* <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Lembrar"
-                /> */}
                   <Button
                     type="submit"
                     fullWidth
@@ -170,9 +165,9 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
                   </Button>
                   <Grid container>
                     <Grid item xs>
-                      {/* <Link href="#" variant="body2">
-                      Recuperar senha
-                    </Link> */}
+                      <Link to="/password-recovery">
+                        Recuperar senha
+                      </Link>
                     </Grid>
                     <Grid item></Grid>
                   </Grid>
