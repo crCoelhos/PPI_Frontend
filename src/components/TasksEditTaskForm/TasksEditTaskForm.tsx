@@ -295,6 +295,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de início"
+                      format="DD-MM-YYYY"
                       value={task?.startDate ? dayjs(task.startDate) : null}
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
@@ -318,6 +319,7 @@ const TasksEditTaskForm: FC<TasksEditTaskFormProps> = ({
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Prazo final"
+                      format="DD-MM-YYYY"
                       value={task?.deadline ? dayjs(task.deadline) : null}
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {

@@ -112,6 +112,7 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de Nascimento"
+                      format="DD-MM-YYYY"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
                           setBirthdate(newDate.format("YYYY-MM-DD"));
@@ -179,6 +180,7 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de Contratação"
+                      format="DD-MM-YYYY"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
                           setHireDate(newDate.format("YYYY-MM-DD"));

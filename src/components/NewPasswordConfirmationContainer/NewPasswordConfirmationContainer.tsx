@@ -12,7 +12,7 @@ import {
   Button,
   createTheme,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import GenericFailToast from "../GenericFailToast/GenericFailToast";
 import GenericSuccessToast from "../GenericSuccessToast/GenericSuccessToast";
 import piwhite from "../../assets/images/ppi-new-logo-branca.png";
@@ -52,11 +52,8 @@ const NewPasswordConfirmationContainer: FC<
   const [showToast, setShowToast] = useState<boolean>(false);
   const [showFailToast, setShowFailToast] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [passwordtoken, setPasswordtoken] = useState<Date | null>(null);
 
   const defaultTheme = createTheme();
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -94,8 +91,6 @@ const NewPasswordConfirmationContainer: FC<
           },
         }
       );
-
-      setPasswordtoken(resetResponse.data.resetToken);
 
       console.log("Resposta do servidor:", resetResponse.data);
     } catch (error: any) {
@@ -188,37 +183,25 @@ const NewPasswordConfirmationContainer: FC<
                 <TextField
                   margin="normal"
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
                   name="token"
                   label="Token de validação"
                   id="token"
-                  value={passwordtoken}
                   required
                 />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
-                  color="primary"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Validar dados
+                  Criar nova senha
                 </Button>
-                {passwordtoken && (
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    color="secondary"
-                    sx={{ mt: 3, mb: 2 }}
-                    onClick={() => {
-                      navigate(
-                        `/new-password-confirmation?validationToken=${passwordtoken}`
-                      );
-                    }}
-                  >
-                    Criar nova senha
-                  </Button>
-                )}
+                <Grid container>
+                  <Grid item xs>
+                    <Link to="/password-recovery">Recuperar senha</Link>
+                  </Grid>
+                  <Grid item></Grid>
+                </Grid>
                 <Copyright sx={{ mt: 5 }} />
               </Box>
             </Box>

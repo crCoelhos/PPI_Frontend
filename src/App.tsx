@@ -21,6 +21,7 @@ import SchedulePage from "./pages/SchedulePage/SchedulePage";
 import TaskDetails from "./components/TaskDetails/TaskDetails";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import PasswordRecoveryPage from "./pages/PasswordRecoveryPage/PasswordRecoveryPage";
+import NewPasswordConfirmation from "./pages/NewPasswordConfirmation/NewPasswordConfirmation";
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
           <Route path="/login" element={<SigninPage />} />
           <Route path="/signin" element={<SigninPage />} />
           <Route path="/password-recovery" element={<PasswordRecoveryPage />} />
+          <Route
+            path="/new-password-confirmation"
+            element={<NewPasswordConfirmation />}
+          />
 
           <Route path="/home" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />

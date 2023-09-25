@@ -1,5 +1,5 @@
-import React, { FC, useState } from "react";
-import styles from "./NewPasswordConfirmationContainer.module.css";
+import React, { FC, useEffect, useState } from "react";
+import styles from "./NewPasswordConfirmation.module.css";
 import { ThemeProvider } from "@emotion/react";
 import {
   Grid,
@@ -13,19 +13,20 @@ import {
   createTheme,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import GenericFailToast from "../GenericFailToast/GenericFailToast";
-import GenericSuccessToast from "../GenericSuccessToast/GenericSuccessToast";
 import piwhite from "../../assets/images/ppi-new-logo-branca.png";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "axios";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import GenericFailToast from "../../components/GenericFailToast/GenericFailToast";
+import GenericSuccessToast from "../../components/GenericSuccessToast/GenericSuccessToast";
+import { useLocation } from "react-router-dom";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
-interface NewPasswordConfirmationContainerProps {}
+interface NewPasswordConfirmationProps {}
 
 function Copyright(props: any) {
   return (
@@ -45,33 +46,36 @@ function Copyright(props: any) {
   );
 }
 
-const NewPasswordConfirmationContainer: FC<
-  NewPasswordConfirmationContainerProps
-> = () => {
+const NewPasswordConfirmation: FC<NewPasswordConfirmationProps> = () => {
   const [responseError, setResponseError] = useState<string | null>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [showFailToast, setShowFailToast] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [passwordtoken, setPasswordtoken] = useState<Date | null>(null);
+  const [newPasswordConfirmation, setNewPasswordConfirmation] =
+    useState<boolean>(false);
 
-  const defaultTheme = createTheme();
+  const [passwordtoken, setPasswordtoken] = useState<string>();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const validationToken = searchParams.get("validationToken");
+  console.log(validationToken);
 
   const navigate = useNavigate();
+
+  const defaultTheme = createTheme();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     let accessValue: string = accessHeaderValue || " ";
-    const cpf = e.target.cpf.value;
-    const email = e.target.email.value;
-    const birthdate = selectedDate
-      ? dayjs(selectedDate).format("YYYY-MM-DD")
-      : null;
+    const newPassword = e.target.newPassword.value;
+    const newPasswordConfirmation = e.target.newPasswordConfirmation.value;
+    const token = validationToken;
 
-    const RecBody = {
-      cpf,
-      email,
-      birthdate,
+    const ConfirmationBody = {
+      token,
+      newPassword,
     };
 
     const headers = {
@@ -81,29 +85,38 @@ const NewPasswordConfirmationContainer: FC<
       },
     };
 
-    console.log("leticia: ", headers);
-    console.log("dina: ", selectedDate);
-    try {
-      const resetResponse = await axios.post(
-        `${appURL}admin/user/request-password`,
-        RecBody,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Access: accessValue,
-          },
+    if (newPasswordConfirmation !== newPassword) {
+      setShowFailToast(true);
+    } else {
+      try {
+        const resetResponse = await axios.post(
+          `${appURL}admin/user/confirm-new-password`,
+          ConfirmationBody,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Access: accessValue,
+            },
+          }
+        );
+
+        setShowFailToast(false);
+        setShowToast(true);
+
+        setNewPasswordConfirmation(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+        
+        console.log("Resposta do servidor:", resetResponse.data);
+      } catch (error: any) {
+        setShowFailToast(true);
+        console.error("Erro na requisição:", error);
+
+        if (error.response) {
+          setShowFailToast(true);
+          console.error("Resposta do servidor:", error.response.data);
         }
-      );
-
-      setPasswordtoken(resetResponse.data.resetToken);
-
-      console.log("Resposta do servidor:", resetResponse.data);
-    } catch (error: any) {
-      console.error("Erro na requisição:", error);
-
-      if (error.response) {
-        console.error("Resposta do servidor:", error.response.data);
-        console.log(RecBody);
       }
     }
   };
@@ -111,11 +124,11 @@ const NewPasswordConfirmationContainer: FC<
   return (
     <>
       <GenericFailToast
-        message="USUÁRIO ou SENHA incorreto!"
+        message="Senha não alterada. Por favor, tente novamente!"
         show={showFailToast}
       />
       <GenericSuccessToast
-        message="Autênticado com sucesso!"
+        message="Senha alterada com sucesso!"
         show={showToast}
       />
       <ThemeProvider theme={defaultTheme}>
@@ -155,70 +168,32 @@ const NewPasswordConfirmationContainer: FC<
                   margin="normal"
                   required
                   fullWidth
-                  label="CPF"
-                  name="cpf"
-                  autoComplete="cpf"
+                  type="password"
+                  label="Nova senha"
+                  name="newPassword"
                   autoFocus
                   placeholder="somente números"
                 />
                 <TextField
                   margin="normal"
                   fullWidth
-                  name="email"
-                  label="Email"
-                  id="email"
-                  autoComplete="current-email"
+                  type="password"
+                  name="newPasswordConfirmation"
+                  label="Confirme a nova senha"
+                  id="newPasswordConfirmation"
                   required
                 />
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="Data de Nascimento"
-                    format="DD-MM-YYYY"
-                    onChange={(newDate: Dayjs | null) => {
-                      if (newDate) {
-                        setSelectedDate(newDate.toDate());
-                      } else {
-                        setSelectedDate(null);
-                      }
-                    }}
-                  />
-                </LocalizationProvider>
-
-                <TextField
-                  margin="normal"
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  name="token"
-                  label="Token de validação"
-                  id="token"
-                  value={passwordtoken}
-                  required
-                />
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
                   sx={{ mt: 3, mb: 2 }}
+                  type="submit"
                 >
-                  Validar dados
+                  Criar nova senha
                 </Button>
-                {passwordtoken && (
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    color="secondary"
-                    sx={{ mt: 3, mb: 2 }}
-                    onClick={() => {
-                      navigate(
-                        `/new-password-confirmation?validationToken=${passwordtoken}`
-                      );
-                    }}
-                  >
-                    Criar nova senha
-                  </Button>
-                )}
+
                 <Copyright sx={{ mt: 5 }} />
               </Box>
             </Box>
@@ -242,4 +217,4 @@ const NewPasswordConfirmationContainer: FC<
   );
 };
 
-export default NewPasswordConfirmationContainer;
+export default NewPasswordConfirmation;

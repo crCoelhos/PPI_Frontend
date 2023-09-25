@@ -16,7 +16,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import TemporaryLeftDrawer from "../TemporaryLeftDrawer/TemporaryLeftDrawer";
 import useSessionStorageUserData from "../../hooks/useSessionStorageUserData";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -108,7 +108,6 @@ export default function PrimaryAppBar() {
   };
 
   const { userData } = useSessionStorageUserData();
-  // console.log(storedName);
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -126,7 +125,6 @@ export default function PrimaryAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
       <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
@@ -151,18 +149,6 @@ export default function PrimaryAppBar() {
     >
       <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      {/* <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Perfil</p>
-      </MenuItem> */}
     </Menu>
   );
 
@@ -180,14 +166,16 @@ export default function PrimaryAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            2PI
-          </Typography>
+          <Link to="/home" style={{ textDecoration: "none", color: "white" }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              2PI
+            </Typography>
+          </Link>
           {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />

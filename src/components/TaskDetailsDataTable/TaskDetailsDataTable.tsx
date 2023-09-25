@@ -264,9 +264,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
             style={{ background: "#D9D9D9", color: "#000" }}
           >
             {isLoading ? (
-              <div style={{ textAlign: "center" }}>
-                <CircularProgress />
-              </div>
+              <div style={{ textAlign: "center" }}>--</div>
             ) : (
               <div>
                 <Grid container>
@@ -298,9 +296,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
             style={{ background: "#D9D9D9", color: "#000" }}
           >
             {isLoading ? (
-              <div style={{ textAlign: "center" }}>
-                <CircularProgress />
-              </div>
+              <div style={{ textAlign: "center" }}> -- </div>
             ) : (
               <div>
                 <Grid container>

@@ -237,6 +237,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de contrato"
+                      format="DD-MM-YYYY"
                       value={user?.hireDate ? dayjs(user.hireDate) : null}
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
@@ -260,6 +261,7 @@ const TeamEditTeamForm: FC<TeamEditTeamFormProps> = ({ onCancel, itemId }) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de nascimento"
+                      format="DD-MM-YYYY"
                       value={user?.birthdate ? dayjs(user.birthdate) : null}
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {

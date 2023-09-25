@@ -30,7 +30,6 @@ interface TaksAddTaskFormProps {
   onCancel: () => void;
 }
 
-
 const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
   const [customers, setCustomers] = React.useState<CustomerData[]>([]);
   const [expertises, setExpertises] = React.useState<ExpertiseData[]>([]);
@@ -153,6 +152,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data de início"
+                      format="DD-MM-YYYY"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
                           setStartDate(newDate.format("YYYY-MM-DD"));
@@ -185,6 +185,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                   </Select>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
+                      format="DD-MM-YYYY"
                       label="Data do contrato"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
@@ -217,6 +218,7 @@ const TaksAddTaskForm: React.FC<TaksAddTaskFormProps> = ({ onCancel }) => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
                       label="Data limite"
+                      format="DD-MM-YYYY"
                       onChange={(newDate: Dayjs | null) => {
                         if (newDate) {
                           setDeadline(newDate.format("YYYY-MM-DD"));

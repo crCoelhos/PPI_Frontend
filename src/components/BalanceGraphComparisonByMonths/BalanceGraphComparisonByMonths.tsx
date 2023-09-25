@@ -87,27 +87,16 @@ const BalanceGraphComparisonByMonths: FC<
     secondMonthName: string
   ) => {
     try {
-      // Faça chamadas de API para buscar dados com base nos meses selecionados
       const firstMonthResponse = await ApiService.fetchData<BalanceData>(
         `admin/tasks/balance/2023/${mapMonthToNumber(firstMonthName)}`
       );
-      // console.log(
-      //   `admin/tasks/balance/2023/${mapMonthToNumber(firstMonthName)}`
-      // );
 
       setFirstMonthBalanceData(firstMonthResponse);
-      // console.log(firstMonthResponse);
       const secondMonthResponse = await ApiService.fetchData<BalanceData>(
         `admin/tasks/balance/2023/${mapMonthToNumber(secondMonthName)}`
       );
       setSecondMonthBalanceData(secondMonthResponse);
 
-      // console.log(
-      //   `admin/tasks/balance/2023/${mapMonthToNumber(secondMonthName)}`
-      // );
-
-      // console.log("Dados do primeiro mês:", firstMonthResponse);
-      // console.log("Dados do segundo mês:", secondMonthResponse);
 
       setRerenderKey((prev) => prev + 1);
     } catch (error) {
