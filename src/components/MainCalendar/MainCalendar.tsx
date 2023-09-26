@@ -166,7 +166,7 @@ const MainCalendar: FC<MainCalendarProps> = () => {
         defaultDate={new Date()}
         defaultView="month"
         events={filteredTaskEvents}
-        style={{ height: "78vh" }}
+        style={{ height: "110vh" }}
         eventPropGetter={eventPropGetter}
         onSelectEvent={(event) => handleEditClick(event.id)}
       />

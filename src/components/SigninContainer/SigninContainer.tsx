@@ -74,7 +74,7 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
         setShowToast(true);
         setTimeout(() => {
           navigate("/home");
-        }, 2500);
+        }, 500);
       }
     }
 

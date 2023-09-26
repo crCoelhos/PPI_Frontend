@@ -9,6 +9,7 @@ import { Grid } from "@mui/material";
 import ComparisonTaskCountGraph from "../../components/ComparisonTaskCountGraph/ComparisonTaskCountGraph";
 import YearBalanceGraph from "../../components/YearBalanceGraph/YearBalanceGraph";
 import BalanceGraphComparisonByMonths from "../../components/BalanceGraphComparisonByMonths/BalanceGraphComparisonByMonths";
+import BackButton from "../../components/BackButton/BackButton";
 
 interface HomePageProps {}
 
@@ -25,6 +26,7 @@ const HomePage: React.FC<HomePageProps> = () => {
     <div className={styles.HomePage}>
       <PrimaryAppBar />
       <div>
+        <BackButton top={66} left={32} />
         {userData ? (
           <div>
             <h1>

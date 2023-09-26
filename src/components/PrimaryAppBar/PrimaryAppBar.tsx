@@ -17,6 +17,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import TemporaryLeftDrawer from "../TemporaryLeftDrawer/TemporaryLeftDrawer";
 import useSessionStorageUserData from "../../hooks/useSessionStorageUserData";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import useLoginController from "../../controllers/loginController";
+import { useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,13 +62,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimaryAppBar() {
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+    useState<null | HTMLElement>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const {
+    username,
+    password,
+    handleUsernameChange,
+    handlePasswordChange,
+    handleSubmit,
+    loginError,
+    loggedIn,
+    loginErrorPasswordOrUser,
+    logout,
+  } = useLoginController();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -88,11 +102,12 @@ export default function PrimaryAppBar() {
     navigate("/profile");
   };
 
-  const handleLogout = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-
-    navigate("/signin");
+  const handleLogout = (e: any) => {
+    e.preventDefault();
+    // setAnchorEl(null);
+    // handleMobileMenuClose();
+    logout();
+    // navigate("/signin");
   };
 
   const handleDrawerOpen = () => {

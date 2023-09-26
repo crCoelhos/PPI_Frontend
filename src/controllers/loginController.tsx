@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useState } from "react";
 import { UserData } from "../interfaces/types";
+import { useNavigate } from "react-router-dom";
 
 const url = process.env.REACT_APP_SERVER_URL;
 const serverSideAccessToken = process.env.REACT_APP_ACCESS_TOKEN;
@@ -14,6 +15,8 @@ const useLoginController = () => {
   const [loginErrorPasswordOrUser, setLoginErrorPasswordOrUser] =
     useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -60,8 +63,8 @@ const useLoginController = () => {
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    window.location.reload();
     localStorage.clear();
+    navigate("/signin");
   };
 
   const updateSessionUser = (updatedUserData: any) => {
