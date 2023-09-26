@@ -15,7 +15,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import RemoveRedEyeIcon  from "@mui/icons-material/RemoveRedEye";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ClearIcon from "@mui/icons-material/Clear";
 import GenericDeleteModal from "../GenericDeleteModal/GenericDeleteModal";
 import TasksEditTaskModal from "../TasksEditTaskModal/TasksEditTaskModal";
@@ -246,10 +246,10 @@ function TasksTable() {
           />
 
           <Button
-            onClick={() => handleViewTaskClick(rowData.id)} 
+            onClick={() => handleViewTaskClick(rowData.id)}
             variant="contained"
             color="inherit"
-            startIcon={<RemoveRedEyeIcon  />}
+            startIcon={<RemoveRedEyeIcon />}
             sx={buttonStyle}
           >
             Ver
@@ -287,14 +287,14 @@ function TasksTable() {
 
   return (
     <TableContainer className={styles.TaskTableContent}>
-      <TextField
+      {/* <TextField
         label="Buscar tarefas"
         value={globalFilter}
         onChange={(e) => {
           setGlobalFilter(e.target.value);
-          // console.log(e.target.value); // Adicione este console.log para verificar o valor
+          console.log(e.target.value); // Adicione este console.log para verificar o valor
         }}
-      />
+      /> */}
 
       <Table className={styles.TasksTable}>
         <TableHead>

@@ -63,6 +63,9 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    if (loginError) {
+      setShowFailToast(true);
+    }
     if (loggedIn) {
       if (location.state) {
         navigate(location.state.url, { state: location.state });
@@ -165,9 +168,7 @@ const SigninBox: React.FC<SigninBoxProps> = () => {
                   </Button>
                   <Grid container>
                     <Grid item xs>
-                      <Link to="/password-recovery">
-                        Recuperar senha
-                      </Link>
+                      <Link to="/password-recovery">Recuperar senha</Link>
                     </Grid>
                     <Grid item></Grid>
                   </Grid>

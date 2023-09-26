@@ -22,6 +22,8 @@ import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 
+import HomeIcon from "@mui/icons-material/Home";
+
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
 
@@ -81,8 +83,6 @@ const NewPasswordConfirmationContainer: FC<
       },
     };
 
-    console.log("leticia: ", headers);
-    console.log("dina: ", selectedDate);
     try {
       const resetResponse = await axios.post(
         `${appURL}admin/user/request-password`,
@@ -95,15 +95,19 @@ const NewPasswordConfirmationContainer: FC<
         }
       );
 
+      setShowToast(true);
+      setShowFailToast(false);
+
       setPasswordtoken(resetResponse.data.resetToken);
 
       console.log("Resposta do servidor:", resetResponse.data);
     } catch (error: any) {
+      setShowFailToast(true);
       console.error("Erro na requisição:", error);
 
       if (error.response) {
+        setShowFailToast(true);
         console.error("Resposta do servidor:", error.response.data);
-        console.log(RecBody);
       }
     }
   };
@@ -194,6 +198,7 @@ const NewPasswordConfirmationContainer: FC<
                   id="token"
                   value={passwordtoken}
                   required
+                  disabled
                 />
                 <Button
                   type="submit"
@@ -204,6 +209,7 @@ const NewPasswordConfirmationContainer: FC<
                 >
                   Validar dados
                 </Button>
+
                 {passwordtoken && (
                   <Button
                     fullWidth
@@ -211,14 +217,30 @@ const NewPasswordConfirmationContainer: FC<
                     color="secondary"
                     sx={{ mt: 3, mb: 2 }}
                     onClick={() => {
-                      navigate(
-                        `/new-password-confirmation?validationToken=${passwordtoken}`
-                      );
+                      setTimeout(() => {
+                        navigate(
+                          `/new-password-confirmation?validationToken=${passwordtoken}`
+                        );
+                      }, 0);
                     }}
                   >
                     Criar nova senha
                   </Button>
                 )}
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => {
+                    setTimeout(() => {
+                      navigate(`/signin`);
+                    }, 0);
+                  }}
+                >
+                  Voltar e fazer login <HomeIcon />
+                </Button>
                 <Copyright sx={{ mt: 5 }} />
               </Box>
             </Box>

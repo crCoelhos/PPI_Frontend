@@ -42,9 +42,14 @@ const TeamMembersAddMemberModal: FC<TeamMembersAddMemberModalProps> = () => {
         >
           Novo colaborador
         </Button> */}
-        <Fab color="primary" onClick={handleOpen} sx={buttonStyle}>
-          <AddIcon />
-        </Fab>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpen}
+          sx={buttonStyle}
+        >
+          <AddIcon /> Adicionar funcionário
+        </Button>
         <Modal
           open={open}
           onClose={handleClose}

@@ -10,6 +10,8 @@ const SchedulePage: FC<SchedulePageProps> = () => (
   <div className={styles.SchedulePageContent}>
     <PrimaryAppBar />
     <div className={styles.SchedulePage}>
+      <h1>Agenda </h1>
+
       <div className={styles.tableArea}>
         <TaksAddTaskModal />
         <MainCalendar />

@@ -42,14 +42,15 @@ const CustomersAddCustomerModal: FC<CustomersAddCustomerModalProps> = () => {
         >
           Novo cliente
         </Button> */}
-        <Fab
+        <Button
+          variant="contained"
           color="primary"
           onClick={handleOpen}
           sx={buttonStyle}
-          // variant="contained"
         >
           <AddIcon />
-        </Fab>
+          Adicionar Cliente
+        </Button>
         <Modal
           open={open}
           onClose={handleClose}

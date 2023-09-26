@@ -13,6 +13,7 @@ const ProfilePage: FC<ProfilePageProps> = () => {
     <div className={styles.ProfilePage}>
       <PrimaryAppBar />
       <div className={styles.ProfilePageTableContent}>
+        <h1>Perfil</h1>
         <ProfileTable />
       </div>
     </div>

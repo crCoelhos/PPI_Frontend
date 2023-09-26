@@ -24,10 +24,13 @@ const TasksPage: FC<TasksPageProps> = () => {
     <div className={styles.TasksPageContent}>
       <PrimaryAppBar />
       <div className={styles.TasksPage}>
-        <TaksAddTaskModal />
-        <React.Suspense fallback={<div>Carregando...</div>}>
-          <TasksTable />
-        </React.Suspense>
+        <h1>Atividades</h1>
+        <div className={styles.tableArea}>
+          <TaksAddTaskModal />
+          <React.Suspense fallback={<div>Carregando...</div>}>
+            <TasksTable />
+          </React.Suspense>
+        </div>
       </div>
     </div>
   );

@@ -39,7 +39,6 @@ const MainCalendar: FC<MainCalendarProps> = () => {
     const fetchTasks = async () => {
       try {
         const res = await ApiService.fetchData<Task[]>("admin/tasks/");
-        // console.log("teste", res);
 
         const formattedTasks = res.map((task) => ({
           start: moment(task.startDate).toDate(),
@@ -51,7 +50,9 @@ const MainCalendar: FC<MainCalendarProps> = () => {
         }));
 
         setTasks(res);
+
         setTaskEvents(formattedTasks);
+
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -88,11 +89,30 @@ const MainCalendar: FC<MainCalendarProps> = () => {
 
   const filterTasksByStatus = (status: string | null) => {
     if (status === null) {
-      return taskEvents;
+      return taskEvents.filter((task) => task.taskStatus !== "COMPLETED");
     }
 
     return taskEvents.filter((task) => task.taskStatus === status);
   };
+
+  // const filterTasksByStatus = (status: string | null) => {
+  //   if (status === null) {
+  //     return taskEvents;
+  //   }
+
+  //   return taskEvents.filter((task) => task.taskStatus === status);
+  // };
+
+  // const filterTasksByStatus = (status: string | null) => {
+
+  //   if (status === null) {
+  //     return taskEvents.filter((task) => task.taskStatus !== "COMPLETED");
+  //   }
+
+  //   return taskEvents.filter(
+  //     (task) => task.taskStatus === status && task.taskStatus !== "COMPLETED"
+  //   );
+  // };
 
   const filteredTaskEvents = filterTasksByStatus(selectedStatus);
 
@@ -140,12 +160,13 @@ const MainCalendar: FC<MainCalendarProps> = () => {
           </MenuItem>
         </Select>
       </FormControl>
+
       <Calendar
         localizer={localizer}
         defaultDate={new Date()}
         defaultView="month"
         events={filteredTaskEvents}
-        style={{ height: "100vh" }}
+        style={{ height: "78vh" }}
         eventPropGetter={eventPropGetter}
         onSelectEvent={(event) => handleEditClick(event.id)}
       />

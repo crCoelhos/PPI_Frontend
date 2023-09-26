@@ -186,7 +186,7 @@ const NewPasswordConfirmationContainer: FC<
                   name="token"
                   label="Token de validação"
                   id="token"
-                  required
+                  disabled
                 />
                 <Button
                   type="submit"

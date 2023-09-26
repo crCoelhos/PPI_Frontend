@@ -13,10 +13,14 @@ const TeamPage: FC<TeamPageProps> = () => {
     <div className={styles.TeamPageContent}>
       <PrimaryAppBar />
       <div className={styles.TeamPage}>
+        <h1>Colaboradores</h1>
+
         <TeamMembersAddMemberModal />
-        <React.Suspense fallback={<div>Carregando...</div>}>
-          <TeamMembersTable />
-        </React.Suspense>
+        <div className={styles.tableArea}>
+          <React.Suspense fallback={<div>Carregando...</div>}>
+            <TeamMembersTable />
+          </React.Suspense>
+        </div>
       </div>
     </div>
   );

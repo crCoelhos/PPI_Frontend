@@ -247,11 +247,11 @@ const CustomersTable: FC<CustomersTableProps> = () => {
 
   return (
     <TableContainer className={styles.CustomersTableContent}>
-      <TextField
+      {/* <TextField
         label="Pesquisar"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
-      />
+      /> */}
       <Table className={styles.CustomersTable}>
         <TableHead>
           <TableRow>

@@ -13,6 +13,8 @@ const CustomersPage: FC<CustomersPageProps> = () => {
     <div className={styles.CustomersPageContent}>
       <PrimaryAppBar />
       <div className={styles.CustomersPage}>
+        <h1>Clientes </h1>
+
         <div className={styles.tableArea}>
           <CustomersAddCustomerModal />
           <CustomersTable />

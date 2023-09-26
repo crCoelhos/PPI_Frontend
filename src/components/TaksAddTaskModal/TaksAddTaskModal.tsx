@@ -42,14 +42,14 @@ const TaksAddTaskModal: FC<TaksAddTaskModalProps> = () => {
         >
           Nova demanda
         </Button> */}
-        <Fab
+        <Button
+          variant="contained"
           color="primary"
           onClick={handleOpen}
           sx={buttonStyle}
-          // variant="contained"
         >
-          <AddIcon />
-        </Fab>
+          <AddIcon /> Adicionar atividade
+        </Button>
         <Modal
           open={open}
           onClose={handleClose}

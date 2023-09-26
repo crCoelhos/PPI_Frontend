@@ -341,9 +341,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
                       Valor estimado da atribuição:
                     </Typography>
                     <Typography variant="body1" sx={activityContentStyle}>
-                      {`R$ ${taskData?.estimateValue}` || (
-                        <CircularProgress size={20} />
-                      )}
+                      {`R$ ${taskData?.estimateValue}` || <span>--</span>}
                     </Typography>
                   </Grid>
 
@@ -410,10 +408,7 @@ const TaskDetailsDataTable: FC<TaskDetailsDataTableProps> = () => {
                       Valor estimado da atribuição:
                     </Typography>
                     <Typography variant="body1" sx={activityContentStyle}>
-                      R${" "}
-                      {taskData?.estimateValue || (
-                        <CircularProgress size={20} />
-                      )}
+                      R$ {taskData?.estimateValue || <span>-</span>}
                     </Typography>
                   </Grid>
 

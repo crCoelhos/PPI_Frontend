@@ -22,6 +22,7 @@ import dayjs, { Dayjs } from "dayjs";
 import GenericFailToast from "../../components/GenericFailToast/GenericFailToast";
 import GenericSuccessToast from "../../components/GenericSuccessToast/GenericSuccessToast";
 import { useLocation } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
 
 const appURL = process.env.REACT_APP_SERVER_URL;
 const accessHeaderValue = process.env.REACT_APP_ACCESS_HEADER;
@@ -107,7 +108,7 @@ const NewPasswordConfirmation: FC<NewPasswordConfirmationProps> = () => {
         setTimeout(() => {
           navigate("/");
         }, 2000);
-        
+
         console.log("Resposta do servidor:", resetResponse.data);
       } catch (error: any) {
         setShowFailToast(true);
@@ -193,7 +194,20 @@ const NewPasswordConfirmation: FC<NewPasswordConfirmationProps> = () => {
                 >
                   Criar nova senha
                 </Button>
-
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => {
+                    setTimeout(() => {
+                      navigate(`/signin`);
+                    }, 0);
+                  }}
+                >
+                  Voltar e fazer login <HomeIcon />
+                </Button>
                 <Copyright sx={{ mt: 5 }} />
               </Box>
             </Box>
