@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import styles from "./TeamMembersAddMemberForm.module.css";
 import { ThemeProvider } from "@emotion/react";
 import {
@@ -33,6 +33,8 @@ interface TeamMembersAddMemberFormProps {
 const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
   onCancel,
 }) => {
+  const [isCpfValidated, setIsCpfValidated] = useState<boolean>(false);
+
   const {
     name,
     cpf,
@@ -61,6 +63,25 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
     setRoleId("2"); //  Funcionário
   }, []);
 
+  function validatedCpf(cpf: any) {
+    cpf = cpf.replace(/\D/g, "");
+    if (cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    var result = true;
+    [9, 10].forEach(function (j) {
+      var soma = 0,
+        r;
+      cpf
+        .split(/(?=)/)
+        .splice(0, j)
+        .forEach(function (e: any, i: any) {
+          soma += parseInt(e) * (j + 2 - (i + 1));
+        });
+      r = soma % 11;
+      r = r < 2 ? 0 : 11 - r;
+      if (r != cpf.substring(j, j + 1)) result = false;
+    });
+    return setIsCpfValidated(result);
+  }
   return (
     <div className={styles.TeamMembersAddMemberForm}>
       <ThemeProvider theme={defaultTheme}>
@@ -79,6 +100,21 @@ const TeamMembersAddMemberForm: FC<TeamMembersAddMemberFormProps> = ({
             <Typography component="h1" variant="h5">
               Cadastrar colaborador
             </Typography>
+
+            {/* <Box
+              component="form"
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (isCpfValidated) {
+                  handleSubmit();
+                } else {
+                  alert("Dados não válidos, verifique e tente novamente.");
+                }
+              }}
+              sx={{ mt: 1 }}
+            > */}
+
             <Box
               component="form"
               noValidate
