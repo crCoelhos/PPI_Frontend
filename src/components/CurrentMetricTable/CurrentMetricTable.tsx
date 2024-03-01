@@ -56,6 +56,7 @@ const CurrentMetricTable: FC<CurrentMetricTableProps> = () => {
 
           setRefreshKey(refreshKey + 1);
           setIsloading(false);
+          console.log("response", response);
         } catch (error) {
           console.error(error);
         }

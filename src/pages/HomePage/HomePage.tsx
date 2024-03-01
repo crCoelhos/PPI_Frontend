@@ -54,11 +54,11 @@ const HomePage: React.FC<HomePageProps> = () => {
 
                 <YearBalanceGraph />
               </Grid>
-              <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+              {/* <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
                 <h2>Comparativo de mes sob demanda</h2>
 
                 <BalanceGraphComparisonByMonths />
-              </Grid>
+              </Grid> */}
             </Grid>
 
             {/* <hr /> */}

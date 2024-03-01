@@ -97,8 +97,11 @@ const BalanceGraphComparisonByMonths: FC<
       );
       setSecondMonthBalanceData(secondMonthResponse);
 
-
       setRerenderKey((prev) => prev + 1);
+
+      console.log("firstMonthResponse", firstMonthResponse);
+      console.log("secondMonthResponse", secondMonthResponse);
+      
     } catch (error) {
       console.error("Erro ao buscar dados do backend:", error);
     }
